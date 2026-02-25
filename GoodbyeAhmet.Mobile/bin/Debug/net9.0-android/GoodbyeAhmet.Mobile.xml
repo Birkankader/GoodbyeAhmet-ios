@@ -1,0 +1,535 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>GoodbyeAhmet.Mobile</name>
+    </assembly>
+    <members>
+        <member name="T:GoodbyeAhmet.Mobile.Converters.IsNotNullConverter">
+            <summary>Returns <c>true</c> when the bound value is not null.</summary>
+        </member>
+        <member name="T:GoodbyeAhmet.Mobile.Converters.ConnectedColorConverter">
+            <summary>
+            Returns a <see cref="T:Microsoft.Maui.Graphics.Color"/> based on a boolean (IsConnected).
+              true  → primary blue (#1E90FF) — connected
+              false → grey (#424242) — disconnected
+            </summary>
+        </member>
+        <member name="T:GoodbyeAhmet.Mobile.Converters.InvertBoolConverter">
+            <summary>Inverts a boolean value.</summary>
+        </member>
+        <member name="T:GoodbyeAhmet.Mobile.Models.BypassPreset">
+            <summary>
+            Represents a DPI bypass configuration preset.
+            Each preset maps to a different packet-manipulation strategy
+            that will be applied inside the VPN packet-processing loop.
+            </summary>
+        </member>
+        <member name="P:GoodbyeAhmet.Mobile.Models.BypassPreset.Key">
+            <summary>Unique key used for persistence (Preferences).</summary>
+        </member>
+        <member name="P:GoodbyeAhmet.Mobile.Models.BypassPreset.DisplayName">
+            <summary>Human-readable name shown in the UI picker.</summary>
+        </member>
+        <member name="P:GoodbyeAhmet.Mobile.Models.BypassPreset.Description">
+            <summary>Short description of what this preset does.</summary>
+        </member>
+        <member name="P:GoodbyeAhmet.Mobile.Models.BypassPreset.SplitClientHello">
+            <summary>
+            Whether to split the TLS ClientHello across multiple TCP segments.
+            This is the most common DPI bypass technique.
+            </summary>
+        </member>
+        <member name="P:GoodbyeAhmet.Mobile.Models.BypassPreset.SplitPosition">
+            <summary>
+            Byte offset at which to split the first TLS record.
+            Typical values: 2, 5, or the SNI field offset (~40-50).
+            Only used when <see cref="P:GoodbyeAhmet.Mobile.Models.BypassPreset.SplitClientHello"/> is true.
+            </summary>
+        </member>
+        <member name="P:GoodbyeAhmet.Mobile.Models.BypassPreset.MixHostCase">
+            <summary>
+            Whether to manipulate the HTTP Host header
+            (e.g., mix case: "Host" → "hOsT").
+            </summary>
+        </member>
+        <member name="P:GoodbyeAhmet.Mobile.Models.BypassPreset.FakeTtl">
+            <summary>
+            TTL value to set on the first outgoing packet of each connection.
+            A low fake-TTL can fool stateful DPI boxes while the packet expires
+            before reaching the real server. 0 = do not modify.
+            </summary>
+        </member>
+        <member name="P:GoodbyeAhmet.Mobile.Models.BypassPreset.DnsRedirectAddress">
+            <summary>
+            Custom DNS-over-UDP server to redirect DNS queries to,
+            bypassing ISP DNS hijacking. Null = use system DNS.
+            </summary>
+        </member>
+        <member name="P:GoodbyeAhmet.Mobile.Models.BypassPreset.DnsRedirectPort">
+            <summary>Port for the custom DNS server. Default 53.</summary>
+        </member>
+        <member name="T:GoodbyeAhmet.Mobile.Platforms.Android.DpiBypassVpnService">
+            <summary>
+            Android VpnService that establishes a TUN interface and proxies TCP/UDP
+            traffic through real sockets, applying DPI bypass techniques on TLS
+            ClientHello and HTTP Host headers.
+            </summary>
+        </member>
+        <member name="M:GoodbyeAhmet.Mobile.Platforms.Android.TcpProxySession.SendWithDpiBypass(System.Byte[])">
+            <summary>
+            Applies DPI bypass techniques to the first TCP payload (typically TLS ClientHello or HTTP request).
+            </summary>
+        </member>
+        <member name="T:GoodbyeAhmet.Mobile.Platforms.Android.VpnHelper">
+            <summary>
+            Handles requesting VPN permission from the user via <see cref="M:Android.Net.VpnService.Prepare(Android.Content.Context)"/>
+            and starting/stopping the <see cref="T:GoodbyeAhmet.Mobile.Platforms.Android.DpiBypassVpnService"/>.
+            </summary>
+        </member>
+        <member name="M:GoodbyeAhmet.Mobile.Platforms.Android.VpnHelper.StartVpnAsync(System.String)">
+            <summary>
+            Requests VPN permission (if needed) and starts the VPN service.
+            Returns true if the VPN was started successfully.
+            </summary>
+        </member>
+        <member name="M:GoodbyeAhmet.Mobile.Platforms.Android.VpnHelper.StopVpn">
+            <summary>
+            Sends a disconnect intent to the VPN service.
+            </summary>
+        </member>
+        <member name="M:GoodbyeAhmet.Mobile.Platforms.Android.VpnHelper.OnActivityResult(System.Int32,Android.App.Result)">
+            <summary>
+            Must be called from <see cref="M:GoodbyeAhmet.Mobile.MainActivity.OnActivityResult(System.Int32,Android.App.Result,Android.Content.Intent)"/> to handle
+            the VPN consent dialog result.
+            </summary>
+        </member>
+        <member name="T:GoodbyeAhmet.Mobile.Services.DnsBlocklistService">
+            <summary>
+            Manages a set of blocked ad/tracker domains.
+            Domains are stored in a HashSet for O(1) lookup.
+            Supports loading from a raw-text URL (one domain per line, hosts-file format).
+            </summary>
+        </member>
+        <member name="P:GoodbyeAhmet.Mobile.Services.DnsBlocklistService.DomainCount">
+            <summary>Number of domains currently loaded.</summary>
+        </member>
+        <member name="P:GoodbyeAhmet.Mobile.Services.DnsBlocklistService.BlockedQueryCount">
+            <summary>Number of DNS queries blocked since VPN start.</summary>
+        </member>
+        <member name="P:GoodbyeAhmet.Mobile.Services.DnsBlocklistService.IsEnabled">
+            <summary>Whether ad-blocking is active.</summary>
+        </member>
+        <member name="M:GoodbyeAhmet.Mobile.Services.DnsBlocklistService.IsBlocked(System.String)">
+            <summary>
+            Returns true if the domain (or any parent domain) is in the blocklist.
+            E.g. "ads.example.com" matches if "example.com" or "ads.example.com" is blocked.
+            </summary>
+        </member>
+        <member name="M:GoodbyeAhmet.Mobile.Services.DnsBlocklistService.ResetCounter">
+            <summary>Reset the per-session blocked query counter.</summary>
+        </member>
+        <member name="M:GoodbyeAhmet.Mobile.Services.DnsBlocklistService.LoadFromUrlAsync(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Loads domains from a blocklist URL (e.g. StevenBlack hosts, AdGuard, etc.).
+            Supports hosts-file format (127.0.0.1 domain) and plain domain-per-line.
+            </summary>
+        </member>
+        <member name="M:GoodbyeAhmet.Mobile.Services.DnsBlocklistService.LoadFromText(System.String)">
+            <summary>
+            Loads domains from raw text content (hosts-file or plain list).
+            </summary>
+        </member>
+        <member name="M:GoodbyeAhmet.Mobile.Services.DnsBlocklistService.AddDomain(System.String)">
+            <summary>
+            Adds a single domain to the blocklist.
+            </summary>
+        </member>
+        <member name="M:GoodbyeAhmet.Mobile.Services.DnsBlocklistService.Clear">
+            <summary>Clears all loaded domains.</summary>
+        </member>
+        <member name="M:GoodbyeAhmet.Mobile.Services.DnsBlocklistService.LoadDefaultListsAsync(System.Threading.CancellationToken)">
+            <summary>
+            Loads the built-in default blocklist URLs concurrently.
+            </summary>
+        </member>
+        <member name="T:GoodbyeAhmet.Mobile.Services.DnsPacketHelper">
+             <summary>
+             Utility class for parsing DNS query packets and crafting spoofed responses.
+             Works directly on raw DNS payload bytes (after stripping IP + UDP headers).
+            
+             DNS packet layout (RFC 1035):
+               Header:  12 bytes (ID, Flags, QDCount, ANCount, NSCount, ARCount)
+               Question: variable (QNAME + QTYPE + QCLASS)
+               Answer:   variable (only in responses)
+             </summary>
+        </member>
+        <member name="M:GoodbyeAhmet.Mobile.Services.DnsPacketHelper.ParseQueryDomain(System.Byte[],System.Int32)">
+            <summary>
+            Parses the queried domain name from a raw DNS payload.
+            Returns null if the packet is malformed or not a standard query.
+            </summary>
+            <param name="dnsPayload">Raw DNS bytes (header + question section).</param>
+            <param name="payloadLength">Number of valid bytes in the buffer.</param>
+            <returns>
+            The domain name as a string (e.g. "ads.example.com"), or null if parsing fails.
+            </returns>
+        </member>
+        <member name="M:GoodbyeAhmet.Mobile.Services.DnsPacketHelper.GetQuestionSectionEnd(System.Byte[],System.Int32)">
+            <summary>
+            Returns the QNAME end offset (past the trailing 0x00 + QTYPE + QCLASS)
+            so we know the full question section length.
+            Returns -1 if parsing fails.
+            </summary>
+        </member>
+        <member name="M:GoodbyeAhmet.Mobile.Services.DnsPacketHelper.CraftBlockedResponse(System.Byte[],System.Int32)">
+             <summary>
+             Crafts a spoofed DNS response that resolves the queried domain to 0.0.0.0.
+            
+             Response format:
+               - Same Transaction ID as query
+               - QR=1, OPCODE=0, AA=1, RD=1, RA=1, RCODE=0
+               - Original question section echoed back
+               - One A record answer: domain → 0.0.0.0, TTL=300
+             </summary>
+             <param name="queryPayload">Original DNS query bytes.</param>
+             <param name="queryLength">Length of the query.</param>
+             <returns>The spoofed DNS response bytes, or null if the query couldn't be parsed.</returns>
+        </member>
+        <member name="M:GoodbyeAhmet.Mobile.Services.DnsPacketHelper.CraftNxDomainResponse(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Crafts an NXDOMAIN response for non-A/AAAA query types.
+            </summary>
+        </member>
+        <member name="T:GoodbyeAhmet.Mobile.Services.PresetService">
+            <summary>
+            Provides the built-in DPI bypass presets.
+            Mirrors the desktop presets translated into Android-compatible
+            packet manipulation parameters.
+            </summary>
+        </member>
+        <member name="M:GoodbyeAhmet.Mobile.Services.PresetService.GetPresets">
+            <summary>
+            Returns all available bypass presets.
+            The first entry is treated as the default.
+            </summary>
+        </member>
+        <member name="M:GoodbyeAhmet.Mobile.Services.PresetService.GetByKey(System.String)">
+            <summary>
+            Looks up a preset by its <see cref="P:GoodbyeAhmet.Mobile.Models.BypassPreset.Key"/>.
+            Falls back to the first preset if the key is not found.
+            </summary>
+        </member>
+        <member name="T:GoodbyeAhmet.Mobile.Services.SettingsService">
+            <summary>
+            Thin wrapper around MAUI <see cref="T:Microsoft.Maui.Storage.Preferences"/> for persisting
+            user settings (selected preset key, auto-start toggle, advanced params, etc.).
+            </summary>
+        </member>
+        <member name="T:GoodbyeAhmet.Mobile.ViewModels.MainViewModel">
+            <summary>
+            Main view-model: drives the Start/Stop button, preset picker,
+            auto-start toggle, and log console shown on <see cref="T:GoodbyeAhmet.Mobile.MainPage"/>.
+            </summary>
+            <inheritdoc/>
+            <inheritdoc/>
+            <inheritdoc/>
+        </member>
+        <member name="P:GoodbyeAhmet.Mobile.ViewModels.MainViewModel.Presets">
+            <summary>Available bypass presets for the Picker.</summary>
+        </member>
+        <member name="P:GoodbyeAhmet.Mobile.ViewModels.MainViewModel.LogEntries">
+            <summary>Log entries shown in the console CollectionView.</summary>
+        </member>
+        <member name="F:GoodbyeAhmet.Mobile.ViewModels.MainViewModel._isConnected">
+            <summary>Whether the VPN tunnel is currently active.</summary>
+        </member>
+        <member name="F:GoodbyeAhmet.Mobile.ViewModels.MainViewModel._isBusy">
+            <summary>True while a connect/disconnect operation is in progress.</summary>
+        </member>
+        <member name="F:GoodbyeAhmet.Mobile.ViewModels.MainViewModel._selectedPreset">
+            <summary>The currently selected bypass preset.</summary>
+        </member>
+        <member name="F:GoodbyeAhmet.Mobile.ViewModels.MainViewModel._startOnBoot">
+            <summary>Whether to auto-start the VPN on device boot.</summary>
+        </member>
+        <member name="F:GoodbyeAhmet.Mobile.ViewModels.MainViewModel._isLogVisible">
+            <summary>Whether the log console panel is visible.</summary>
+        </member>
+        <member name="M:GoodbyeAhmet.Mobile.ViewModels.MainViewModel.ToggleVpnAsync">
+            <summary>
+            Toggles the VPN connection on/off.
+            The actual Android VpnService integration will be added in Step 4.
+            </summary>
+        </member>
+        <member name="M:GoodbyeAhmet.Mobile.ViewModels.MainViewModel.ToggleLog">
+            <summary>Toggles log console visibility.</summary>
+        </member>
+        <member name="M:GoodbyeAhmet.Mobile.ViewModels.MainViewModel.AddLog(System.String)">
+            <summary>Adds a timestamped entry to the log console.</summary>
+        </member>
+        <member name="P:GoodbyeAhmet.Mobile.ViewModels.MainViewModel.IsConnected">
+            <inheritdoc cref="F:GoodbyeAhmet.Mobile.ViewModels.MainViewModel._isConnected"/>
+        </member>
+        <member name="P:GoodbyeAhmet.Mobile.ViewModels.MainViewModel.IsBusy">
+            <inheritdoc cref="F:GoodbyeAhmet.Mobile.ViewModels.MainViewModel._isBusy"/>
+        </member>
+        <member name="P:GoodbyeAhmet.Mobile.ViewModels.MainViewModel.SelectedPreset">
+            <inheritdoc cref="F:GoodbyeAhmet.Mobile.ViewModels.MainViewModel._selectedPreset"/>
+        </member>
+        <member name="P:GoodbyeAhmet.Mobile.ViewModels.MainViewModel.StartOnBoot">
+            <inheritdoc cref="F:GoodbyeAhmet.Mobile.ViewModels.MainViewModel._startOnBoot"/>
+        </member>
+        <member name="P:GoodbyeAhmet.Mobile.ViewModels.MainViewModel.IsLogVisible">
+            <inheritdoc cref="F:GoodbyeAhmet.Mobile.ViewModels.MainViewModel._isLogVisible"/>
+        </member>
+        <member name="F:GoodbyeAhmet.Mobile.ViewModels.MainViewModel.toggleVpnCommand">
+            <summary>The backing field for <see cref="P:GoodbyeAhmet.Mobile.ViewModels.MainViewModel.ToggleVpnCommand"/>.</summary>
+        </member>
+        <member name="P:GoodbyeAhmet.Mobile.ViewModels.MainViewModel.ToggleVpnCommand">
+            <summary>Gets an <see cref="T:CommunityToolkit.Mvvm.Input.IAsyncRelayCommand"/> instance wrapping <see cref="M:GoodbyeAhmet.Mobile.ViewModels.MainViewModel.ToggleVpnAsync"/>.</summary>
+        </member>
+        <member name="F:GoodbyeAhmet.Mobile.ViewModels.MainViewModel.toggleLogCommand">
+            <summary>The backing field for <see cref="P:GoodbyeAhmet.Mobile.ViewModels.MainViewModel.ToggleLogCommand"/>.</summary>
+        </member>
+        <member name="P:GoodbyeAhmet.Mobile.ViewModels.MainViewModel.ToggleLogCommand">
+            <summary>Gets an <see cref="T:CommunityToolkit.Mvvm.Input.IRelayCommand"/> instance wrapping <see cref="M:GoodbyeAhmet.Mobile.ViewModels.MainViewModel.ToggleLog"/>.</summary>
+        </member>
+        <member name="T:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel">
+            <summary>
+            ViewModel for SettingsPage — mirrors the WPF SettingsWindow:
+            language, preset selection, advanced DPI parameters, and toggles.
+            </summary>
+            <inheritdoc/>
+            <inheritdoc/>
+            <inheritdoc/>
+            <inheritdoc/>
+        </member>
+        <member name="P:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel.SelectedLanguage">
+            <inheritdoc cref="F:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel._selectedLanguage"/>
+        </member>
+        <member name="P:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel.SelectedPreset">
+            <inheritdoc cref="F:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel._selectedPreset"/>
+        </member>
+        <member name="P:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel.Ttl">
+            <inheritdoc cref="F:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel._ttl"/>
+        </member>
+        <member name="P:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel.SplitPosition">
+            <inheritdoc cref="F:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel._splitPosition"/>
+        </member>
+        <member name="P:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel.SplitClientHello">
+            <inheritdoc cref="F:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel._splitClientHello"/>
+        </member>
+        <member name="P:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel.MixHostCase">
+            <inheritdoc cref="F:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel._mixHostCase"/>
+        </member>
+        <member name="P:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel.DnsV4Address">
+            <inheritdoc cref="F:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel._dnsV4Address"/>
+        </member>
+        <member name="P:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel.DnsV4Port">
+            <inheritdoc cref="F:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel._dnsV4Port"/>
+        </member>
+        <member name="P:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel.DnsV6Address">
+            <inheritdoc cref="F:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel._dnsV6Address"/>
+        </member>
+        <member name="P:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel.DnsV6Port">
+            <inheritdoc cref="F:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel._dnsV6Port"/>
+        </member>
+        <member name="P:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel.AdBlockEnabled">
+            <inheritdoc cref="F:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel._adBlockEnabled"/>
+        </member>
+        <member name="P:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel.AdBlockListUrl">
+            <inheritdoc cref="F:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel._adBlockListUrl"/>
+        </member>
+        <member name="P:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel.AdBlockDomainCount">
+            <inheritdoc cref="F:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel._adBlockDomainCount"/>
+        </member>
+        <member name="P:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel.AdBlockStatus">
+            <inheritdoc cref="F:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel._adBlockStatus"/>
+        </member>
+        <member name="P:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel.IsLoadingBlocklist">
+            <inheritdoc cref="F:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel._isLoadingBlocklist"/>
+        </member>
+        <member name="P:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel.StartOnBoot">
+            <inheritdoc cref="F:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel._startOnBoot"/>
+        </member>
+        <member name="P:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel.ActivateOnStart">
+            <inheritdoc cref="F:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel._activateOnStart"/>
+        </member>
+        <member name="M:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel.OnSelectedPresetChanged(GoodbyeAhmet.Mobile.Models.BypassPreset)">
+            <summary>Executes the logic for when <see cref="P:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel.SelectedPreset"/> just changed.</summary>
+            <param name="value">The new property value that was set.</param>
+            <remarks>This method is invoked right after the value of <see cref="P:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel.SelectedPreset"/> is changed.</remarks>
+        </member>
+        <member name="F:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel.saveCommand">
+            <summary>The backing field for <see cref="P:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel.SaveCommand"/>.</summary>
+        </member>
+        <member name="P:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel.SaveCommand">
+            <summary>Gets an <see cref="T:CommunityToolkit.Mvvm.Input.IAsyncRelayCommand"/> instance wrapping <see cref="M:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel.SaveAsync"/>.</summary>
+        </member>
+        <member name="F:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel.loadBlocklistCommand">
+            <summary>The backing field for <see cref="P:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel.LoadBlocklistCommand"/>.</summary>
+        </member>
+        <member name="P:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel.LoadBlocklistCommand">
+            <summary>Gets an <see cref="T:CommunityToolkit.Mvvm.Input.IAsyncRelayCommand"/> instance wrapping <see cref="M:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel.LoadBlocklistAsync"/>.</summary>
+        </member>
+        <member name="F:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel.resetCommand">
+            <summary>The backing field for <see cref="P:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel.ResetCommand"/>.</summary>
+        </member>
+        <member name="P:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel.ResetCommand">
+            <summary>Gets an <see cref="T:CommunityToolkit.Mvvm.Input.IRelayCommand"/> instance wrapping <see cref="M:GoodbyeAhmet.Mobile.ViewModels.SettingsViewModel.Reset"/>.</summary>
+        </member>
+        <member name="T:GoodbyeAhmet.Mobile.ViewModels.LanguageOption">
+            <summary>Simple record for language picker items.</summary>
+        </member>
+        <member name="M:GoodbyeAhmet.Mobile.ViewModels.LanguageOption.#ctor(System.String,System.String)">
+            <summary>Simple record for language picker items.</summary>
+        </member>
+        <member name="T:GoodbyeAhmet.Mobile.Resource">
+            <summary>
+            Android Resource Designer class.
+            Exposes the Android Resource designer assembly into the project Namespace.
+            </summary>
+        </member>
+        <member name="T:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs">
+            <summary>
+            A helper type providing cached, reusable <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instances
+            for all properties generated with <see cref="T:CommunityToolkit.Mvvm.ComponentModel.ObservablePropertyAttribute"/>.
+            </summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.IsConnected">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "IsConnected" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.IsBusy">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "IsBusy" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.SelectedPreset">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "SelectedPreset" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.StartOnBoot">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "StartOnBoot" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.IsLogVisible">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "IsLogVisible" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.SelectedLanguage">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "SelectedLanguage" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.Ttl">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "Ttl" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.SplitPosition">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "SplitPosition" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.SplitClientHello">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "SplitClientHello" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.MixHostCase">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "MixHostCase" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.DnsV4Address">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "DnsV4Address" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.DnsV4Port">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "DnsV4Port" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.DnsV6Address">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "DnsV6Address" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.DnsV6Port">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "DnsV6Port" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.AdBlockEnabled">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "AdBlockEnabled" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.AdBlockListUrl">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "AdBlockListUrl" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.AdBlockDomainCount">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "AdBlockDomainCount" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.AdBlockStatus">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "AdBlockStatus" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.IsLoadingBlocklist">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "IsLoadingBlocklist" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangingArgs.ActivateOnStart">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangingEventArgs"/> instance for all "ActivateOnStart" generated properties.</summary>
+        </member>
+        <member name="T:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs">
+            <summary>
+            A helper type providing cached, reusable <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instances
+            for all properties generated with <see cref="T:CommunityToolkit.Mvvm.ComponentModel.ObservablePropertyAttribute"/>.
+            </summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.IsConnected">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "IsConnected" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.StatusText">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "StatusText" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.StatusColor">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "StatusColor" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.IsBusy">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "IsBusy" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.SelectedPreset">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "SelectedPreset" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.PresetSubtitle">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "PresetSubtitle" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.StartOnBoot">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "StartOnBoot" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.IsLogVisible">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "IsLogVisible" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.SelectedLanguage">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "SelectedLanguage" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.Ttl">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "Ttl" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.SplitPosition">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "SplitPosition" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.SplitClientHello">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "SplitClientHello" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.MixHostCase">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "MixHostCase" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.DnsV4Address">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "DnsV4Address" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.DnsV4Port">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "DnsV4Port" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.DnsV6Address">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "DnsV6Address" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.DnsV6Port">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "DnsV6Port" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.AdBlockEnabled">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "AdBlockEnabled" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.AdBlockListUrl">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "AdBlockListUrl" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.AdBlockDomainCount">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "AdBlockDomainCount" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.AdBlockStatus">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "AdBlockStatus" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.IsLoadingBlocklist">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "IsLoadingBlocklist" generated properties.</summary>
+        </member>
+        <member name="F:CommunityToolkit.Mvvm.ComponentModel.__Internals.__KnownINotifyPropertyChangedArgs.ActivateOnStart">
+            <summary>The cached <see cref="T:System.ComponentModel.PropertyChangedEventArgs"/> instance for all "ActivateOnStart" generated properties.</summary>
+        </member>
+    </members>
+</doc>

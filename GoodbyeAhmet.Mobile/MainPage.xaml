@@ -1,41 +1,195 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="GoodbyeAhmet.Mobile.MainPage">
-			 
-    <ScrollView>
-        <VerticalStackLayout 
-            Spacing="25" 
-            Padding="30,0" 
-            VerticalOptions="Center">
+             xmlns:vm="clr-namespace:GoodbyeAhmet.Mobile.ViewModels"
+             x:Class="GoodbyeAhmet.Mobile.MainPage"
+             x:DataType="vm:MainViewModel"
+             Title="GoodbyeAhmet"
+             BackgroundColor="#121212"
+             Shell.NavBarIsVisible="False">
 
-            <Image
-                Source="dotnet_bot.png"
-                SemanticProperties.Description="Cute dot net bot waving hi to you!"
-                HeightRequest="200"
-                HorizontalOptions="Center" />
-                
-            <Label 
-                Text="Hello, World!"
-                SemanticProperties.HeadingLevel="Level1"
-                FontSize="32"
-                HorizontalOptions="Center" />
-            
-            <Label 
-                Text="Welcome to .NET Multi-platform App UI"
-                SemanticProperties.HeadingLevel="Level2"
-                SemanticProperties.Description="Welcome to dot net Multi platform App U I"
-                FontSize="18"
-                HorizontalOptions="Center" />
+    <Grid RowDefinitions="Auto,*,Auto,Auto"
+          Padding="24,48,24,24"
+          RowSpacing="0">
 
-            <Button 
-                x:Name="CounterBtn"
-                Text="Click me"
-                SemanticProperties.Hint="Counts the number of times you click"
-                Clicked="OnCounterClicked"
-                HorizontalOptions="Center" />
+        <!-- ══════════ Row 0 — Header (like WPF top bar) ══════════ -->
+        <Grid Grid.Row="0"
+              ColumnDefinitions="*,Auto"
+              Margin="0,0,0,8">
+            <VerticalStackLayout Grid.Column="0"
+                                 VerticalOptions="Center">
+                <Label Text="Goodbye Ahmet"
+                       FontSize="22"
+                       FontAttributes="Bold"
+                       TextColor="#1E90FF"/>
+                <Label Text="DPI Security"
+                       FontSize="12"
+                       TextColor="#B0B0B0"/>
+            </VerticalStackLayout>
 
+            <!-- Toolbar buttons -->
+            <HorizontalStackLayout Grid.Column="1"
+                                   Spacing="12"
+                                   VerticalOptions="Center">
+                <!-- Log toggle button -->
+                <Border StrokeShape="RoundRectangle 6"
+                        Stroke="Transparent"
+                        BackgroundColor="Transparent"
+                        Padding="4"
+                        WidthRequest="36"
+                        HeightRequest="36">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ToggleLogCommand}"/>
+                    </Border.GestureRecognizers>
+                    <!-- Terminal/Console icon as Path -->
+                    <Path Data="M2,4 L2,20 L22,20 L22,4 Z M4,6 L20,6 L20,18 L4,18 Z M6,10 L10,13 L6,16 Z M12,15 L18,15 L18,17 L12,17 Z"
+                          Fill="#1E90FF"
+                          Aspect="Uniform"
+                          WidthRequest="22"
+                          HeightRequest="22"
+                          HorizontalOptions="Center"
+                          VerticalOptions="Center"/>
+                </Border>
+
+                <!-- Settings (gear) button -->
+                <Border StrokeShape="RoundRectangle 6"
+                        Stroke="Transparent"
+                        BackgroundColor="Transparent"
+                        Padding="4"
+                        WidthRequest="36"
+                        HeightRequest="36">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnSettingsTapped"/>
+                    </Border.GestureRecognizers>
+                    <!-- Gear/cog icon -->
+                    <Path Data="M19.14,12.94 C19.18,12.64 19.2,12.33 19.2,12 C19.2,11.68 19.18,11.36 19.13,11.06 L21.16,9.48 C21.34,9.34 21.39,9.07 21.28,8.87 L19.36,5.55 C19.24,5.33 18.99,5.26 18.77,5.33 L16.38,6.29 C15.88,5.91 15.35,5.59 14.76,5.35 L14.4,2.81 C14.36,2.57 14.16,2.4 13.92,2.4 L10.08,2.4 C9.84,2.4 9.65,2.57 9.61,2.81 L9.25,5.35 C8.66,5.59 8.12,5.92 7.63,6.29 L5.24,5.33 C5.02,5.25 4.77,5.33 4.65,5.55 L2.74,8.87 C2.62,9.08 2.66,9.34 2.86,9.48 L4.89,11.06 C4.84,11.36 4.8,11.69 4.8,12 C4.8,12.31 4.82,12.64 4.87,12.94 L2.85,14.52 C2.67,14.66 2.62,14.93 2.73,15.13 L4.65,18.45 C4.77,18.67 5.02,18.74 5.24,18.67 L7.63,17.71 C8.13,18.09 8.66,18.41 9.25,18.65 L9.61,21.19 C9.65,21.43 9.84,21.6 10.08,21.6 L13.92,21.6 C14.16,21.6 14.36,21.43 14.39,21.19 L14.75,18.65 C15.34,18.41 15.88,18.09 16.37,17.71 L18.76,18.67 C18.98,18.75 19.23,18.67 19.35,18.45 L21.27,15.13 C21.39,14.91 21.34,14.66 21.15,14.52 L19.14,12.94 Z M12,15.6 C10.02,15.6 8.4,13.98 8.4,12 C8.4,10.02 10.02,8.4 12,8.4 C13.98,8.4 15.6,10.02 15.6,12 C15.6,13.98 13.98,15.6 12,15.6 Z"
+                          Fill="#1E90FF"
+                          Aspect="Uniform"
+                          WidthRequest="22"
+                          HeightRequest="22"
+                          HorizontalOptions="Center"
+                          VerticalOptions="Center"/>
+                </Border>
+            </HorizontalStackLayout>
+        </Grid>
+
+        <!-- ══════════ Row 1 — Center Toggle Button (like WPF) ══════════ -->
+        <Grid Grid.Row="1"
+              VerticalOptions="Center"
+              HorizontalOptions="Center">
+            <VerticalStackLayout Spacing="0"
+                                 HorizontalOptions="Center">
+
+                <!-- Power Button Circle -->
+                <Grid WidthRequest="170"
+                      HeightRequest="170"
+                      HorizontalOptions="Center">
+
+                    <!-- Outer ring (glow when connected) -->
+                    <Ellipse WidthRequest="170"
+                             HeightRequest="170"
+                             StrokeThickness="4"
+                             Stroke="{Binding IsConnected, Converter={StaticResource ConnectedColorConverter}}"
+                             Fill="Transparent"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Center"/>
+
+                    <!-- Inner circle -->
+                    <Ellipse WidthRequest="140"
+                             HeightRequest="140"
+                             Fill="{Binding IsConnected, Converter={StaticResource ConnectedColorConverter}}"
+                             Opacity="0.15"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Center"/>
+
+                    <!-- Inner circle solid (visible when connected) -->
+                    <Ellipse WidthRequest="140"
+                             HeightRequest="140"
+                             Fill="#1E90FF"
+                             IsVisible="{Binding IsConnected}"
+                             Opacity="0.3"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Center"/>
+
+                    <!-- Power icon (SVG path) -->
+                    <Path Data="M13,3 L11,3 L11,13 L13,13 Z M17.83,5.17 L16.41,6.59 C17.99,7.86 19,9.81 19,12 C19,15.87 15.87,19 12,19 C8.13,19 5,15.87 5,12 C5,9.81 6.01,7.86 7.58,6.58 L6.17,5.17 C4.23,6.82 3,9.26 3,12 C3,16.97 7.03,21 12,21 C16.97,21 21,16.97 21,12 C21,9.26 19.77,6.82 17.83,5.17 Z"
+                          Fill="{Binding IsConnected, Converter={StaticResource ConnectedColorConverter}}"
+                          Aspect="Uniform"
+                          WidthRequest="60"
+                          HeightRequest="60"
+                          HorizontalOptions="Center"
+                          VerticalOptions="Center"/>
+
+                    <!-- Invisible tap target -->
+                    <Button BackgroundColor="Transparent"
+                            BorderWidth="0"
+                            Command="{Binding ToggleVpnCommand}"
+                            WidthRequest="170"
+                            HeightRequest="170"
+                            CornerRadius="85"/>
+                </Grid>
+
+            </VerticalStackLayout>
+        </Grid>
+
+        <!-- ══════════ Row 2 — Status Footer (like WPF) ══════════ -->
+        <VerticalStackLayout Grid.Row="2"
+                             HorizontalOptions="Center"
+                             Spacing="4"
+                             Margin="0,0,0,8">
+            <Label Text="{Binding StatusText}"
+                   TextColor="{Binding StatusColor}"
+                   FontSize="20"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"/>
+            <Label Text="{Binding PresetSubtitle}"
+                   TextColor="#B0B0B0"
+                   FontSize="12"
+                   HorizontalOptions="Center"/>
         </VerticalStackLayout>
-    </ScrollView>
- 
+
+        <!-- ══════════ Row 3 — Log Console (toggleable) ══════════ -->
+        <Border Grid.Row="3"
+                StrokeShape="RoundRectangle 8"
+                Stroke="#333333"
+                BackgroundColor="#1E1E1E"
+                Padding="10"
+                IsVisible="{Binding IsLogVisible}"
+                HeightRequest="160"
+                Margin="0,4,0,0">
+            <Grid RowDefinitions="Auto,*">
+                <Grid Grid.Row="0"
+                      ColumnDefinitions="*,Auto"
+                      Margin="0,0,0,4">
+                    <Label Text="Log Console"
+                           FontSize="12"
+                           TextColor="#B0B0B0"/>
+                    <Label Grid.Column="1"
+                           Text="✕"
+                           TextColor="#B0B0B0"
+                           FontSize="14"
+                           HorizontalOptions="End">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ToggleLogCommand}"/>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Grid>
+                <CollectionView Grid.Row="1"
+                                ItemsSource="{Binding LogEntries}"
+                                ItemsUpdatingScrollMode="KeepLastItemInView">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <Label Text="{Binding .}"
+                                   FontSize="10"
+                                   FontFamily="OpenSansRegular"
+                                   TextColor="#00FF88"
+                                   Margin="0,1"/>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Grid>
+        </Border>
+
+    </Grid>
+
 </ContentPage>

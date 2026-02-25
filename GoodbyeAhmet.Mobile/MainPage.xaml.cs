@@ -1,24 +1,27 @@
-﻿namespace GoodbyeAhmet.Mobile;
+﻿using GoodbyeAhmet.Mobile.ViewModels;
+
+namespace GoodbyeAhmet.Mobile;
 
 public partial class MainPage : ContentPage
 {
-	int count = 0;
+	private readonly MainViewModel _vm;
 
-	public MainPage()
+	public MainPage(MainViewModel viewModel)
 	{
 		InitializeComponent();
+		BindingContext = _vm = viewModel;
 	}
 
-	private void OnCounterClicked(object sender, EventArgs e)
+	protected override void OnAppearing()
 	{
-		count++;
+		base.OnAppearing();
+		// Reload settings that may have changed in SettingsPage
+		_vm.ReloadFromSettings();
+	}
 
-		if (count == 1)
-			CounterBtn.Text = $"Clicked {count} time";
-		else
-			CounterBtn.Text = $"Clicked {count} times";
-
-		SemanticScreenReader.Announce(CounterBtn.Text);
+	private async void OnSettingsTapped(object? sender, TappedEventArgs e)
+	{
+		await Shell.Current.GoToAsync("SettingsPage");
 	}
 }
 
