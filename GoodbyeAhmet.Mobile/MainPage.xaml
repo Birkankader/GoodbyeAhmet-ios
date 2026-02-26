@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:GoodbyeAhmet.Mobile.ViewModels"
+             xmlns:svc="clr-namespace:GoodbyeAhmet.Mobile.Services"
              x:Class="GoodbyeAhmet.Mobile.MainPage"
              x:DataType="vm:MainViewModel"
              Title="GoodbyeAhmet"
@@ -18,11 +19,11 @@
               Margin="0,0,0,8">
             <VerticalStackLayout Grid.Column="0"
                                  VerticalOptions="Center">
-                <Label Text="Goodbye Ahmet"
+                <Label Text="{Binding [AppTitle], Source={x:Static svc:LocalizationService.Instance}}"
                        FontSize="22"
                        FontAttributes="Bold"
                        TextColor="#1E90FF"/>
-                <Label Text="DPI Security"
+                <Label Text="{Binding [AppSubtitle], Source={x:Static svc:LocalizationService.Instance}}"
                        FontSize="12"
                        TextColor="#B0B0B0"/>
             </VerticalStackLayout>
@@ -161,7 +162,7 @@
                 <Grid Grid.Row="0"
                       ColumnDefinitions="*,Auto"
                       Margin="0,0,0,4">
-                    <Label Text="Log Console"
+                    <Label Text="{Binding [LogConsole], Source={x:Static svc:LocalizationService.Instance}}"
                            FontSize="12"
                            TextColor="#B0B0B0"/>
                     <Label Grid.Column="1"

@@ -20,6 +20,7 @@ public static class MauiProgram
 		builder.Services.AddSingleton<PresetService>();
 		builder.Services.AddSingleton<SettingsService>();
 		builder.Services.AddSingleton<DnsBlocklistService>();
+		builder.Services.AddSingleton(LocalizationService.Instance);
 
 		// ── ViewModels ──────────────────────────────────────
 		builder.Services.AddSingleton<MainViewModel>();

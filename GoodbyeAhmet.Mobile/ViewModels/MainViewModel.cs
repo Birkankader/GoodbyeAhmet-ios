@@ -18,6 +18,7 @@ public partial class MainViewModel : ObservableObject
 {
     private readonly PresetService _presetService;
     private readonly SettingsService _settingsService;
+    private readonly LocalizationService _loc = LocalizationService.Instance;
 
     // ── Constructor ─────────────────────────────────────────────
 
@@ -42,7 +43,7 @@ public partial class MainViewModel : ObservableObject
         IsConnected = DpiBypassVpnService.IsRunning;
 #endif
 
-        AddLog("GoodbyeAhmet ready. Select a preset and tap Start.");
+        AddLog(_loc["Ready"]);
     }
 
     // ── Observable Properties ───────────────────────────────────
@@ -80,9 +81,9 @@ public partial class MainViewModel : ObservableObject
 
     // ── Derived Properties ──────────────────────────────────────
 
-    public string StatusText => IsConnected ? "Connected" : "Disconnected";
+    public string StatusText => IsConnected ? _loc["Connected"] : _loc["Disconnected"];
     public Color StatusColor => IsConnected ? Color.FromArgb("#1E90FF") : Color.FromArgb("#B0B0B0");
-    public string PresetSubtitle => SelectedPreset is not null ? $"Using: {SelectedPreset.DisplayName}" : "No preset selected";
+    public string PresetSubtitle => SelectedPreset is not null ? _loc.Get("Using", SelectedPreset.DisplayName) : _loc["NoPresetSelected"];
 
     // ── Reload from persisted settings (called when returning from SettingsPage) ──
 
@@ -101,6 +102,10 @@ public partial class MainViewModel : ObservableObject
             OnPropertyChanged(nameof(StartOnBoot));
             AddLog($"Preset updated → {preset.DisplayName}");
         }
+
+        // Refresh status text (may have changed due to language switch)
+        OnPropertyChanged(nameof(StatusText));
+        OnPropertyChanged(nameof(PresetSubtitle));
     }
 
     // ── Commands ────────────────────────────────────────────────
@@ -119,7 +124,7 @@ public partial class MainViewModel : ObservableObject
             if (IsConnected)
             {
                 // ── STOP ────────────────────────────────────
-                AddLog("Stopping VPN…");
+                AddLog(_loc["StoppingVpn"]);
 
 #if ANDROID
                 VpnHelper.StopVpn();
@@ -132,17 +137,17 @@ public partial class MainViewModel : ObservableObject
                 // ── START ───────────────────────────────────
                 if (SelectedPreset is null)
                 {
-                    AddLog("⚠ Please select a preset first.");
+                    AddLog($"⚠ {_loc["SelectPresetFirst"]}");
                     return;
                 }
 
-                AddLog($"Starting VPN with preset: {SelectedPreset.DisplayName}…");
+                AddLog(_loc.Get("StartingVpn", SelectedPreset.DisplayName));
 
 #if ANDROID
                 var started = await VpnHelper.StartVpnAsync(SelectedPreset.Key);
                 if (!started)
                 {
-                    AddLog("⚠ VPN permission denied by user.");
+                    AddLog($"⚠ {_loc["VpnPermissionDenied"]}");
                 }
                 // State will be updated via ConnectionStateChanged event
 #endif

@@ -108,6 +108,7 @@
             Manages a set of blocked ad/tracker domains.
             Domains are stored in a HashSet for O(1) lookup.
             Supports loading from a raw-text URL (one domain per line, hosts-file format).
+            Persists the downloaded blocklist to local storage so it survives app restarts.
             </summary>
         </member>
         <member name="P:GoodbyeAhmet.Mobile.Services.DnsBlocklistService.DomainCount">
@@ -132,7 +133,17 @@
             <summary>
             Loads domains from a blocklist URL (e.g. StevenBlack hosts, AdGuard, etc.).
             Supports hosts-file format (127.0.0.1 domain) and plain domain-per-line.
+            The downloaded text is cached to local storage for offline reuse.
             </summary>
+        </member>
+        <member name="M:GoodbyeAhmet.Mobile.Services.DnsBlocklistService.LoadFromCacheAsync">
+            <summary>
+            Loads the blocklist from local cache file (if it exists).
+            Called on app startup to restore the previously downloaded list.
+            </summary>
+        </member>
+        <member name="P:GoodbyeAhmet.Mobile.Services.DnsBlocklistService.HasCache">
+            <summary>Whether a cached blocklist file exists on disk.</summary>
         </member>
         <member name="M:GoodbyeAhmet.Mobile.Services.DnsBlocklistService.LoadFromText(System.String)">
             <summary>
@@ -198,6 +209,38 @@
         <member name="M:GoodbyeAhmet.Mobile.Services.DnsPacketHelper.CraftNxDomainResponse(System.Byte[],System.Int32,System.Int32)">
             <summary>
             Crafts an NXDOMAIN response for non-A/AAAA query types.
+            </summary>
+        </member>
+        <member name="T:GoodbyeAhmet.Mobile.Services.LocalizationService">
+            <summary>
+            Provides localized strings by loading JSON locale files from embedded resources.
+            Implements <see cref="T:System.ComponentModel.INotifyPropertyChanged"/> so XAML bindings auto-refresh
+            when the language changes at runtime.
+            </summary>
+        </member>
+        <member name="P:GoodbyeAhmet.Mobile.Services.LocalizationService.Instance">
+            <summary>Static singleton instance for XAML binding via {x:Static}.</summary>
+        </member>
+        <member name="P:GoodbyeAhmet.Mobile.Services.LocalizationService.Item(System.String)">
+            <summary>
+            Indexer — returns translated string for the given key,
+            or the key itself if no translation is found.
+            Usage in XAML: Text="{Binding [SettingsTitle], Source={x:Static svc:LocalizationService.Instance}}"
+            </summary>
+        </member>
+        <member name="P:GoodbyeAhmet.Mobile.Services.LocalizationService.CurrentLanguage">
+            <summary>Current language code (e.g. "en-US", "tr-TR").</summary>
+        </member>
+        <member name="M:GoodbyeAhmet.Mobile.Services.LocalizationService.LoadLanguageAsync(System.String)">
+            <summary>
+            Loads the locale JSON for the specified language code.
+            Falls back to en-US if the requested file doesn't exist.
+            </summary>
+        </member>
+        <member name="M:GoodbyeAhmet.Mobile.Services.LocalizationService.Get(System.String,System.Object[])">
+            <summary>
+            Gets a translated string with format arguments.
+            E.g. Get("Using", "Preset 1") → "Using: Preset 1"
             </summary>
         </member>
         <member name="T:GoodbyeAhmet.Mobile.Services.PresetService">

@@ -6,12 +6,16 @@ namespace GoodbyeAhmet.Mobile.Services;
 /// Manages a set of blocked ad/tracker domains.
 /// Domains are stored in a HashSet for O(1) lookup.
 /// Supports loading from a raw-text URL (one domain per line, hosts-file format).
+/// Persists the downloaded blocklist to local storage so it survives app restarts.
 /// </summary>
 public sealed class DnsBlocklistService
 {
     private volatile HashSet<string> _blockedDomains = new(StringComparer.OrdinalIgnoreCase);
     private volatile bool _enabled;
     private int _blockedCount;
+
+    private static string CacheFilePath =>
+        Path.Combine(FileSystem.AppDataDirectory, "blocklist_cache.txt");
 
     /// <summary>Number of domains currently loaded.</summary>
     public int DomainCount => _blockedDomains.Count;
@@ -63,6 +67,7 @@ public sealed class DnsBlocklistService
     /// <summary>
     /// Loads domains from a blocklist URL (e.g. StevenBlack hosts, AdGuard, etc.).
     /// Supports hosts-file format (127.0.0.1 domain) and plain domain-per-line.
+    /// The downloaded text is cached to local storage for offline reuse.
     /// </summary>
     public async Task<int> LoadFromUrlAsync(string url, CancellationToken ct = default)
     {
@@ -70,12 +75,55 @@ public sealed class DnsBlocklistService
         {
             using var http = new HttpClient { Timeout = TimeSpan.FromSeconds(30) };
             var text = await http.GetStringAsync(url, ct);
+
+            // Save to local cache so the blocklist survives app restarts
+            await SaveCacheAsync(text);
+
             return ParseAndLoad(text);
         }
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"[Blocklist] Failed to load '{url}': {ex.Message}");
             return 0;
+        }
+    }
+
+    /// <summary>
+    /// Loads the blocklist from local cache file (if it exists).
+    /// Called on app startup to restore the previously downloaded list.
+    /// </summary>
+    public async Task<int> LoadFromCacheAsync()
+    {
+        try
+        {
+            if (!File.Exists(CacheFilePath))
+                return 0;
+
+            var text = await File.ReadAllTextAsync(CacheFilePath);
+            var count = ParseAndLoad(text);
+            System.Diagnostics.Debug.WriteLine($"[Blocklist] Restored {count} domains from cache");
+            return count;
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[Blocklist] Failed to load cache: {ex.Message}");
+            return 0;
+        }
+    }
+
+    /// <summary>Whether a cached blocklist file exists on disk.</summary>
+    public bool HasCache => File.Exists(CacheFilePath);
+
+    private static async Task SaveCacheAsync(string text)
+    {
+        try
+        {
+            await File.WriteAllTextAsync(CacheFilePath, text);
+            System.Diagnostics.Debug.WriteLine("[Blocklist] Saved cache to disk");
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[Blocklist] Failed to save cache: {ex.Message}");
         }
     }
 

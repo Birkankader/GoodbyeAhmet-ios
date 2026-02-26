@@ -26,6 +26,11 @@ D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\mauisplash
 D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\mauifont.stamp
 D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\resizetizer\f\OpenSans-Regular.ttf
 D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\resizetizer\f\OpenSans-Semibold.ttf
+D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\resizetizer\r\drawable-xxxhdpi\dotnet_bot.png
+D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\resizetizer\r\drawable-xxhdpi\dotnet_bot.png
+D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\resizetizer\r\drawable-xhdpi\dotnet_bot.png
+D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\resizetizer\r\drawable-hdpi\dotnet_bot.png
+D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\resizetizer\r\drawable-mdpi\dotnet_bot.png
 D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\resizetizer\r\mipmap-xxxhdpi\appicon_round.png
 D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\resizetizer\r\mipmap-xxhdpi\appicon_round.png
 D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\resizetizer\r\mipmap-xhdpi\appicon_round.png
@@ -48,11 +53,6 @@ D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\resizetize
 D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\resizetizer\r\mipmap-xhdpi\appicon_background.png
 D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\resizetizer\r\mipmap-hdpi\appicon_background.png
 D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\resizetizer\r\mipmap-mdpi\appicon_background.png
-D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\resizetizer\r\drawable-xxxhdpi\dotnet_bot.png
-D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\resizetizer\r\drawable-xxhdpi\dotnet_bot.png
-D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\resizetizer\r\drawable-xhdpi\dotnet_bot.png
-D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\resizetizer\r\drawable-hdpi\dotnet_bot.png
-D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\resizetizer\r\drawable-mdpi\dotnet_bot.png
 D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\mauiimage.stamp
 D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\mauiimage.outputs
 D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\libraryprojectimports.cache
@@ -213,6 +213,7 @@ D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\android\sr
 D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\android\src\androidx\window\R.java
 D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\android\src\com\bumptech\glide\gifdecoder\R.java
 D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\android\src\com\bumptech\glide\R.java
+D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\android\src\com\goodbyeahmet\dpi\DpiBypassVpnService.java
 D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\android\src\com\google\android\material\R.java
 D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\android\src\crc640a8d9a12ddbf2cf2\BatteryBroadcastReceiver.java
 D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\android\src\crc640a8d9a12ddbf2cf2\DeviceDisplayImplementation_Listener.java
@@ -427,6 +428,16 @@ D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\android\sr
 D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\android\src\mono\com\google\android\material\tabs\TabLayout_BaseOnTabSelectedListenerImplementor.java
 D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\android\src\mono\MonoPackageManager_Resources.java
 D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\assets\AboutAssets.txt
+D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\assets\de-DE.json
+D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\assets\el-GR.json
+D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\assets\en-US.json
+D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\assets\es-ES.json
+D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\assets\fr-FR.json
+D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\assets\pt-PT.json
+D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\assets\ru-RU.json
+D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\assets\tr-TR.json
+D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\assets\zh-CN.json
+D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\assets\zh-TW.json
 D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\assets\OpenSans-Regular.ttf
 D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\assets\OpenSans-Semibold.ttf
 D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\android\bin\packaged_resources
@@ -456,4 +467,3 @@ D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\stamp\_Con
 D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\stamp\_GenerateJavaStubs.stamp
 D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\stamp\_GeneratePackageManagerJava.stamp
 D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\stamp\_ResolveLibraryProjectImports.stamp
-D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\obj\Release\net9.0-android\android\src\com\goodbyeahmet\dpi\DpiBypassVpnService.java

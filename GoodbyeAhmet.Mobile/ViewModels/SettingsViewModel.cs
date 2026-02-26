@@ -16,12 +16,14 @@ public partial class SettingsViewModel : ObservableObject
     private readonly SettingsService _settingsService;
 
     private readonly DnsBlocklistService _blocklistService;
+    private readonly LocalizationService _loc;
 
     public SettingsViewModel(PresetService presetService, SettingsService settingsService, DnsBlocklistService blocklistService)
     {
         _presetService = presetService;
         _settingsService = settingsService;
         _blocklistService = blocklistService;
+        _loc = LocalizationService.Instance;
 
         // ── Languages ───────────────────────────────
         foreach (var lang in AvailableLanguagesList)
@@ -51,8 +53,8 @@ public partial class SettingsViewModel : ObservableObject
         _adBlockListUrl = _settingsService.AdBlockListUrl;
         _adBlockDomainCount = _blocklistService.DomainCount;
         _adBlockStatus = _blocklistService.DomainCount > 0
-            ? $"{_blocklistService.DomainCount:N0} domains loaded"
-            : "No blocklist loaded";
+            ? _loc.Get("DomainsLoaded", _blocklistService.DomainCount.ToString("N0"))
+            : _loc["NoBlocklistLoaded"];
 
         // ── Toggles ─────────────────────────────────
         _startOnBoot = _settingsService.StartOnBoot;
@@ -161,6 +163,9 @@ public partial class SettingsViewModel : ObservableObject
         // Sync blocklist service state
         _blocklistService.IsEnabled = AdBlockEnabled;
 
+        // Apply language change
+        await _loc.LoadLanguageAsync(SelectedLanguage?.Code ?? "en-US");
+
         await Shell.Current.GoToAsync("..");
     }
 
@@ -170,7 +175,7 @@ public partial class SettingsViewModel : ObservableObject
         if (IsLoadingBlocklist) return;
 
         IsLoadingBlocklist = true;
-        AdBlockStatus = "Downloading blocklist…";
+        AdBlockStatus = _loc["DownloadingBlocklist"];
 
         try
         {
@@ -182,7 +187,7 @@ public partial class SettingsViewModel : ObservableObject
             _blocklistService.IsEnabled = AdBlockEnabled;
 
             AdBlockDomainCount = _blocklistService.DomainCount;
-            AdBlockStatus = $"{_blocklistService.DomainCount:N0} domains loaded";
+            AdBlockStatus = _loc.Get("DomainsLoaded", _blocklistService.DomainCount.ToString("N0"));
         }
         catch (Exception ex)
         {

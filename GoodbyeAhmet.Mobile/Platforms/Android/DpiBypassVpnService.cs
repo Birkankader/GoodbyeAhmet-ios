@@ -102,8 +102,15 @@ public class DpiBypassVpnService : VpnService
 
         // Initialize DNS ad-blocking (Pi-hole sinkhole)
         _blocklist = IPlatformApplication.Current!.Services.GetRequiredService<Services.DnsBlocklistService>();
-        if (settings.AdBlockEnabled && _blocklist.IsEnabled)
+        _blocklist.IsEnabled = settings.AdBlockEnabled;
+        if (_blocklist.IsEnabled)
         {
+            // If enabled but no domains loaded yet, try loading from cache synchronously
+            if (_blocklist.DomainCount == 0 && _blocklist.HasCache)
+            {
+                _blocklist.LoadFromCacheAsync().GetAwaiter().GetResult();
+            }
+
             EmitLog($"Ad-blocker active — {_blocklist.DomainCount} domains loaded.");
             _blocklist.ResetCounter();
         }
