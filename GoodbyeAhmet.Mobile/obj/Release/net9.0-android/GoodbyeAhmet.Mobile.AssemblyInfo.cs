@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GoodbyeAhmet.Mobile")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+5dc1313d2c805e2f696a94f91e8896aca39b2912")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0+39ef8be1b2f7927647119b124b36e6725028bee4")]
 [assembly: System.Reflection.AssemblyProductAttribute("GoodbyeAhmet.Mobile")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GoodbyeAhmet.Mobile")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

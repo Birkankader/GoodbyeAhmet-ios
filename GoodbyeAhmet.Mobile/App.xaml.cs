@@ -15,8 +15,8 @@ public partial class App : Application
 		var settings = IPlatformApplication.Current!.Services.GetRequiredService<SettingsService>();
 		var blocklist = IPlatformApplication.Current!.Services.GetRequiredService<DnsBlocklistService>();
 
-		// Initialize localization with saved language (must complete before UI is built)
-		LocalizationService.Instance.LoadLanguageAsync(settings.Language).GetAwaiter().GetResult();
+		// Initialize localization with saved language (synchronous – safe on main thread)
+		LocalizationService.Instance.LoadLanguageSync(settings.Language);
 
 		if (settings.AdBlockEnabled)
 		{

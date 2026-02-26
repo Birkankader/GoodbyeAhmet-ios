@@ -39,6 +39,24 @@ public sealed class LocalizationService : INotifyPropertyChanged
     }
 
     /// <summary>
+    /// Synchronously loads the locale JSON for the specified language code.
+    /// Safe to call from the main thread during app initialization.
+    /// </summary>
+    public void LoadLanguageSync(string languageCode)
+    {
+        _currentLanguage = languageCode;
+        var json = LoadJsonSync(languageCode);
+        if (json == null && languageCode != "en-US")
+            json = LoadJsonSync("en-US");
+
+        if (json != null)
+            _strings = json;
+
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Item[]"));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(string.Empty));
+    }
+
+    /// <summary>
     /// Loads the locale JSON for the specified language code.
     /// Falls back to en-US if the requested file doesn't exist.
     /// </summary>
@@ -92,6 +110,30 @@ public sealed class LocalizationService : INotifyPropertyChanged
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"[Localization] Failed to load '{code}': {ex.Message}");
+            return null;
+        }
+    }
+
+    private static Dictionary<string, string>? LoadJsonSync(string code)
+    {
+        try
+        {
+            var filename = $"{code}.json";
+            // Use synchronous file I/O via the app package asset path
+            var path = Path.Combine(FileSystem.AppDataDirectory, "..", filename);
+            // Try opening via the platform asset manager directly
+#if ANDROID
+            using var stream = global::Android.App.Application.Context.Assets!.Open(filename);
+#else
+            using var stream = FileSystem.OpenAppPackageFileAsync(filename).Result;
+#endif
+            using var reader = new StreamReader(stream);
+            var text = reader.ReadToEnd();
+            return JsonSerializer.Deserialize<Dictionary<string, string>>(text);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[Localization] Failed to load '{code}' sync: {ex.Message}");
             return null;
         }
     }

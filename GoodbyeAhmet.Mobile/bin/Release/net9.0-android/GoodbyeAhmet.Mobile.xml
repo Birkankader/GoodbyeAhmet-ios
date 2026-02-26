@@ -231,6 +231,12 @@
         <member name="P:GoodbyeAhmet.Mobile.Services.LocalizationService.CurrentLanguage">
             <summary>Current language code (e.g. "en-US", "tr-TR").</summary>
         </member>
+        <member name="M:GoodbyeAhmet.Mobile.Services.LocalizationService.LoadLanguageSync(System.String)">
+            <summary>
+            Synchronously loads the locale JSON for the specified language code.
+            Safe to call from the main thread during app initialization.
+            </summary>
+        </member>
         <member name="M:GoodbyeAhmet.Mobile.Services.LocalizationService.LoadLanguageAsync(System.String)">
             <summary>
             Loads the locale JSON for the specified language code.

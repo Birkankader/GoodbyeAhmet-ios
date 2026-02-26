@@ -10,6 +10,7 @@ public class MainActivity
 	public static final String __md_methods;
 	static {
 		__md_methods = 
+			"n_onCreate:(Landroid/os/Bundle;)V:GetOnCreate_Landroid_os_Bundle_Handler\n" +
 			"n_onActivityResult:(IILandroid/content/Intent;)V:GetOnActivityResult_IILandroid_content_Intent_Handler\n" +
 			"";
 		mono.android.Runtime.register ("GoodbyeAhmet.Mobile.MainActivity, GoodbyeAhmet.Mobile", MainActivity.class, __md_methods);
@@ -30,6 +31,13 @@ public class MainActivity
 			mono.android.TypeManager.Activate ("GoodbyeAhmet.Mobile.MainActivity, GoodbyeAhmet.Mobile", "System.Int32, System.Private.CoreLib", this, new java.lang.Object[] { p0 });
 		}
 	}
+
+	public void onCreate (android.os.Bundle p0)
+	{
+		n_onCreate (p0);
+	}
+
+	private native void n_onCreate (android.os.Bundle p0);
 
 	public void onActivityResult (int p0, int p1, android.content.Intent p2)
 	{
