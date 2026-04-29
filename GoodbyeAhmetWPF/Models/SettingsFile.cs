@@ -69,6 +69,34 @@ namespace GoodbyeAhmetWPF.Models
             set { _language = value; OnPropertyChanged(); }
         }
 
+        private bool _adBlockEnabled = false;
+        public bool AdBlockEnabled
+        {
+            get => _adBlockEnabled;
+            set { _adBlockEnabled = value; OnPropertyChanged(); }
+        }
+
+        private string _adBlockListUrl = "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts";
+        public string AdBlockListUrl
+        {
+            get => _adBlockListUrl;
+            set { _adBlockListUrl = value; OnPropertyChanged(); }
+        }
+
+        private bool _autoRestartOnCrash = true;
+        public bool AutoRestartOnCrash
+        {
+            get => _autoRestartOnCrash;
+            set { _autoRestartOnCrash = value; OnPropertyChanged(); }
+        }
+
+        private bool _checkForUpdates = true;
+        public bool CheckForUpdates
+        {
+            get => _checkForUpdates;
+            set { _checkForUpdates = value; OnPropertyChanged(); }
+        }
+
         public SettingsFile()
         {
             // Default initialization if needed

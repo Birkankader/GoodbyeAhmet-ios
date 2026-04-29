@@ -15,6 +15,9 @@ namespace GoodbyeAhmetWPF.Services
         public static LocalizationService Instance => _instance ??= new LocalizationService();
 
         private Dictionary<string, string> _strings = new Dictionary<string, string>();
+        private Dictionary<string, string> _fallback = new Dictionary<string, string>();
+        private const string FallbackLanguage = "en-US";
+        private readonly HashSet<string> _missingKeysReported = new();
 
         private string LocalFolder => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "local");
 
@@ -22,11 +25,22 @@ namespace GoodbyeAhmetWPF.Services
         {
             get
             {
-                if (_strings.TryGetValue(key, out var value))
+                if (_strings.TryGetValue(key, out var value)) return value;
+                if (_fallback.TryGetValue(key, out var fallback))
                 {
-                    return value;
+                    ReportMissing(key);
+                    return fallback;
                 }
+                ReportMissing(key);
                 return key;
+            }
+        }
+
+        private void ReportMissing(string key)
+        {
+            if (_missingKeysReported.Add(key))
+            {
+                Logger.Warn($"Localization key missing in '{_currentLanguage}': {key}");
             }
         }
 
@@ -79,33 +93,42 @@ namespace GoodbyeAhmetWPF.Services
 
         private LocalizationService()
         {
-            // Initial load
+            // Pre-load English fallback dictionary so untranslated keys
+            // gracefully degrade to English instead of showing raw key names.
+            _fallback = LoadDictionary(FallbackLanguage) ?? new Dictionary<string, string>();
             LoadLanguage(_currentLanguage);
+        }
+
+        private Dictionary<string, string>? LoadDictionary(string languageCode)
+        {
+            try
+            {
+                var path = Path.Combine(LocalFolder, $"{languageCode}.json");
+                if (!File.Exists(path)) return null;
+                var json = File.ReadAllText(path);
+                return JsonSerializer.Deserialize<Dictionary<string, string>>(json);
+            }
+            catch (Exception ex)
+            {
+                Logger.Warn($"Failed to load language file '{languageCode}'.", ex);
+                return null;
+            }
         }
 
         public void LoadLanguage(string languageCode)
         {
-            string path = Path.Combine(LocalFolder, $"{languageCode}.json");
-            if (File.Exists(path))
+            var dict = LoadDictionary(languageCode);
+            if (dict != null)
             {
-                try
-                {
-                    string json = File.ReadAllText(path);
-                    var dict = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
-                    if (dict != null)
-                    {
-                        _strings = dict;
-                    }
-                }
-                catch
-                {
-                    // Fallback or log
-                }
+                _strings = dict;
             }
-            else
+            else if (languageCode != FallbackLanguage)
             {
-                // Try finding any json if default not found? Or just keep empty
+                Logger.Warn($"Language '{languageCode}' not found. Falling back to {FallbackLanguage}.");
+                _strings = _fallback;
             }
+
+            _missingKeysReported.Clear();
 
             // Notify that everything changed
             OnPropertyChanged(string.Empty);

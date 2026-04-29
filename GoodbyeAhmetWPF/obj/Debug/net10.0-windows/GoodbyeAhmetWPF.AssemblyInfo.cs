@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GoodbyeAhmetWPF")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e1d3bb158242b1375596de606ee670489da8561a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e933f927c1481ce9a785b6a2772fa7d7172cac76")]
 [assembly: System.Reflection.AssemblyProductAttribute("GoodbyeAhmetWPF")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GoodbyeAhmetWPF")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GoodbyeAhmetWPF"
         xmlns:services="clr-namespace:GoodbyeAhmetWPF.Services"
+        xmlns:converters="clr-namespace:GoodbyeAhmetWPF.Converters"
         mc:Ignorable="d"
         Title="Settings"
         SizeToContent="Height"
@@ -14,6 +15,8 @@
         Background="{StaticResource WindowBackgroundBrush}">
 
         <Window.Resources>
+                <converters:InverseBoolConverter x:Key="InverseBoolConverter"/>
+
                 <!-- Custom ComboBox Style -->
                 <Style x:Key="DarkComboBoxStyle"
                        TargetType="ComboBox">
@@ -230,7 +233,7 @@
                                   Height="45"
                                   Style="{StaticResource DarkComboBoxStyle}"
                                   Margin="0,0,0,30"
-                                  IsEnabled="{Binding IsRunning, Converter={StaticResource BooleanToVisibilityConverter}, ConverterParameter=Inverse}"/>
+                                  IsEnabled="{Binding IsRunning, Converter={StaticResource InverseBoolConverter}}"/>
 
                         <!-- Manual Config Header -->
                         <TextBlock Text="{Binding Source={x:Static services:LocalizationService.Instance}, Path=[AdvancedParameters]}"
@@ -273,18 +276,27 @@
                                                    Margin="0,0,0,6"
                                                    Foreground="{StaticResource TextSecondaryBrush}"/>
                                         <TextBox Text="{Binding Settings.TTL, UpdateSourceTrigger=PropertyChanged}"
+                                                 PreviewTextInput="NumericOnly_PreviewTextInput"
+                                                 DataObject.Pasting="NumericOnly_Pasting"
+                                                 MaxLength="3"
                                                  Margin="0,0,0,15"/>
 
                                         <TextBlock Text="{Binding Source={x:Static services:LocalizationService.Instance}, Path=[DNSV4Port]}"
                                                    Margin="0,0,0,6"
                                                    Foreground="{StaticResource TextSecondaryBrush}"/>
                                         <TextBox Text="{Binding Settings.V4Port, UpdateSourceTrigger=PropertyChanged}"
+                                                 PreviewTextInput="NumericOnly_PreviewTextInput"
+                                                 DataObject.Pasting="NumericOnly_Pasting"
+                                                 MaxLength="5"
                                                  Margin="0,0,0,15"/>
 
                                         <TextBlock Text="{Binding Source={x:Static services:LocalizationService.Instance}, Path=[DNSV6Port]}"
                                                    Margin="0,0,0,6"
                                                    Foreground="{StaticResource TextSecondaryBrush}"/>
                                         <TextBox Text="{Binding Settings.V6Port, UpdateSourceTrigger=PropertyChanged}"
+                                                 PreviewTextInput="NumericOnly_PreviewTextInput"
+                                                 DataObject.Pasting="NumericOnly_Pasting"
+                                                 MaxLength="5"
                                                  Margin="0,0,0,15"/>
                                 </StackPanel>
                         </Grid>
@@ -306,6 +318,104 @@
                                                         ScaleY="1.1"/>
                                 </CheckBox.LayoutTransform>
                         </CheckBox>
+
+                        <CheckBox IsChecked="{Binding Settings.AutoRestartOnCrash}"
+                                  Content="{Binding Source={x:Static services:LocalizationService.Instance}, Path=[AutoRestartOnCrash]}"
+                                  Margin="0,15,0,0">
+                                <CheckBox.LayoutTransform>
+                                        <ScaleTransform ScaleX="1.1"
+                                                        ScaleY="1.1"/>
+                                </CheckBox.LayoutTransform>
+                        </CheckBox>
+
+                        <CheckBox IsChecked="{Binding Settings.CheckForUpdates}"
+                                  Content="{Binding Source={x:Static services:LocalizationService.Instance}, Path=[CheckForUpdates]}"
+                                  Margin="0,15,0,0">
+                                <CheckBox.LayoutTransform>
+                                        <ScaleTransform ScaleX="1.1"
+                                                        ScaleY="1.1"/>
+                                </CheckBox.LayoutTransform>
+                        </CheckBox>
+
+                        <!-- ──── Presets I/O & Diagnostics ──── -->
+                        <StackPanel Orientation="Horizontal"
+                                        Margin="0,15,0,0">
+                                <Button Command="{Binding ImportPresetsCommand}"
+                                        Content="{Binding Source={x:Static services:LocalizationService.Instance}, Path=[ImportPresets]}"
+                                        Style="{StaticResource SecondaryButton}"
+                                        Height="32"
+                                        Padding="12,0"
+                                        Margin="0,0,8,0"/>
+                                <Button Command="{Binding ExportPresetsCommand}"
+                                        Content="{Binding Source={x:Static services:LocalizationService.Instance}, Path=[ExportPresets]}"
+                                        Style="{StaticResource SecondaryButton}"
+                                        Height="32"
+                                        Padding="12,0"
+                                        Margin="0,0,8,0"/>
+                                <Button Command="{Binding OpenLogFolderCommand}"
+                                        Content="{Binding Source={x:Static services:LocalizationService.Instance}, Path=[OpenLogs]}"
+                                        Style="{StaticResource SecondaryButton}"
+                                        Height="32"
+                                        Padding="12,0"/>
+                        </StackPanel>
+
+                        <!-- ──── Ad-Block (DNS Sinkhole) ──── -->
+                        <TextBlock Text="{Binding Source={x:Static services:LocalizationService.Instance}, Path=[AdBlockTitle]}"
+                                   FontSize="11"
+                                   FontWeight="Bold"
+                                   Foreground="{StaticResource TextSecondaryBrush}"
+                                   Margin="0,25,0,12"/>
+
+                        <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="{Binding Source={x:Static services:LocalizationService.Instance}, Path=[EnableAdBlocker]}"
+                                           VerticalAlignment="Center"
+                                           Foreground="{StaticResource TextPrimaryBrush}"/>
+                                <CheckBox Grid.Column="1"
+                                          IsChecked="{Binding Settings.AdBlockEnabled}"
+                                          VerticalAlignment="Center">
+                                        <CheckBox.LayoutTransform>
+                                                <ScaleTransform ScaleX="1.1"
+                                                                ScaleY="1.1"/>
+                                        </CheckBox.LayoutTransform>
+                                </CheckBox>
+                        </Grid>
+
+                        <TextBlock Text="{Binding Source={x:Static services:LocalizationService.Instance}, Path=[BlocklistUrl]}"
+                                   Margin="0,0,0,6"
+                                   Foreground="{StaticResource TextSecondaryBrush}"/>
+                        <TextBox Text="{Binding Settings.AdBlockListUrl, UpdateSourceTrigger=PropertyChanged}"
+                                 Margin="0,0,0,10"/>
+
+                        <Grid Margin="0,0,0,5">
+                                <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Orientation="Horizontal">
+                                        <Button Command="{Binding LoadBlocklistCommand}"
+                                                Content="{Binding Source={x:Static services:LocalizationService.Instance}, Path=[LoadList]}"
+                                                Style="{StaticResource SecondaryButton}"
+                                                Height="35"
+                                                Padding="16,0"
+                                                Margin="0,0,10,0"/>
+                                        <Button Command="{Binding ClearBlocklistCacheCommand}"
+                                                Content="{Binding Source={x:Static services:LocalizationService.Instance}, Path=[ClearCache]}"
+                                                Style="{StaticResource SecondaryButton}"
+                                                Height="35"
+                                                Padding="16,0"
+                                                Margin="0,0,10,0"/>
+                                </StackPanel>
+                                <TextBlock Grid.Column="1"
+                                           Text="{Binding AdBlockStatus}"
+                                           VerticalAlignment="Center"
+                                           Foreground="{StaticResource TextSecondaryBrush}"
+                                           FontSize="12"/>
+                        </Grid>
+
                 </StackPanel>
 
                 <!-- Bottom Actions -->

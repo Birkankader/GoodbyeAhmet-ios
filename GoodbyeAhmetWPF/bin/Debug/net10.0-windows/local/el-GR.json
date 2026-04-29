@@ -22,9 +22,16 @@
     "SettingsReset": "Επαναφορά ρυθμίσεων.",
     "AdjustParameters": "Προσαρμογή παραμέτρων σύνδεσης",
     "AdvancedParameters": "ΠΡΟΗΓΜΕΝΕΣ ΠΑΡΑΜΕΤΡΟΙ",
-    "Connected": "ΣΥΝΔΕΔΕΜΕΝΟ",
-    "Disconnected": "ΑΠΟΣΥΝΔΕΔΕΜΕΝΟ",
+    "Connected": "Συνδεδεμένο",
+    "Disconnected": "Αποσυνδεδεμένο",
     "Using": "Χρήση: {0}",
     "About": "Σχετικά",
-    "AboutContent": "Goodbye Ahmet - Εργαλείο Ασφαλείας DPI\nΈκδοση 1.0\n\nΤο Goodbye Ahmet είναι ένα περιβάλλον εργασίας χρήστη σχεδιασμένο για να σας βοηθήσει να παρακάμψετε συστήματα Deep Packet Inspection (DPI) και να έχετε ελεύθερη πρόσβαση σε αποκλεισμένους ιστότοπους.\n\nΑυτή η εφαρμογή τροφοδοτείται από το έργο GoodbyeDPI.\n\nΣυντελεστές:\nGoodbyeDPI από ValdikSS\nhttps://github.com/ValdikSS/GoodbyeDPI"
+    "AboutContent": "Goodbye Ahmet - Εργαλείο Ασφαλείας DPI\nΈκδοση 1.0\n\nΤο Goodbye Ahmet είναι ένα περιβάλλον εργασίας χρήστη σχεδιασμένο για να σας βοηθήσει να παρακάμψετε συστήματα Deep Packet Inspection (DPI) και να έχετε ελεύθερη πρόσβαση σε αποκλεισμένους ιστότοπους.\n\nΑυτή η εφαρμογή τροφοδοτείται από το έργο GoodbyeDPI.\n\nΣυντελεστές:\nGoodbyeDPI από ValdikSS\nhttps://github.com/ValdikSS/GoodbyeDPI",
+    "AdBlockTitle": "ΑΠΟΚΛΕΙΣΜΟΣ ΔΙΑΦΗΜΙΣΕΩΝ (DNS SINKHOLE)",
+    "EnableAdBlocker": "Ενεργοποίηση αποκλεισμού διαφ.",
+    "BlocklistUrl": "URL λίστας αποκλεισμού",
+    "LoadList": "Φόρτωση λίστας",
+    "NoBlocklistLoaded": "Δεν φορτώθηκε λίστα",
+    "DomainsLoaded": "{0} domains φορτώθηκαν",
+    "DownloadingBlocklist": "Λήψη λίστας αποκλεισμού…"
 }

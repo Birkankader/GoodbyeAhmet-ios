@@ -1,0 +1,19 @@
+# Build outputs
+**/bin/
+**/obj/
+**/publish/
+**/release/
+
+# IDE
+.vs/
+*.user
+*.suo
+
+# Logs / runtime
+*.log
+**/blocklist_cache.txt
+**/custom_hosts.txt
+
+# OS
+Thumbs.db
+.DS_Store

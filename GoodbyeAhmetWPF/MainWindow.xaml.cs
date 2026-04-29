@@ -33,16 +33,20 @@ public partial class MainWindow : Window
     {
         if (DataContext is MainViewModel vm)
         {
+            // Honor ActivateOnStart preference safely (any errors are caught inside the VM).
+            vm.StartIfActivateOnStart();
+
             if (vm.Settings.LaunchOnStart)
             {
+                // Make sure the tray icon is visible BEFORE we hide the window,
+                // otherwise the user may think the app crashed.
+                NotificationService.Instance.EnsureVisible();
                 Hide();
-                if (vm.StartCommand.CanExecute(null))
-                {
-                    // Already started in VM constructor if logic placed there, 
-                    // but good to ensure or show balloon tip.
-                    NotificationService.Instance.ShowNotification("Goodbye Ahmet", LocalizationService.Instance["RunningInBackground"]);
-                }
+                NotificationService.Instance.ShowNotification("Goodbye Ahmet", LocalizationService.Instance["RunningInBackground"]);
             }
+
+            // Best-effort background update check.
+            _ = vm.CheckForUpdatesIfEnabledAsync();
         }
     }
 

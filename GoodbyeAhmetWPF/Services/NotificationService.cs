@@ -11,6 +11,7 @@ namespace GoodbyeAhmetWPF.Services
 
         private NotifyIcon _notifyIcon;
         private ContextMenuStrip _contextMenu;
+        private EventHandler? _doubleClickHandler;
 
         private NotificationService()
         {
@@ -22,8 +23,10 @@ namespace GoodbyeAhmetWPF.Services
             // For now, I'll try to extract the icon from the entry assembly.
             try
             {
-                // Try to use the application icon
-                _notifyIcon.Icon = Icon.ExtractAssociatedIcon(System.Environment.ProcessPath ?? System.Reflection.Assembly.GetEntryAssembly()!.Location);
+                // In single-file deployments, Assembly.Location is empty, so resolve the executable path from the process or app base directory.
+                var executablePath = Environment.ProcessPath
+                    ?? System.IO.Path.Combine(AppContext.BaseDirectory, "GoodbyeAhmetWPF.exe");
+                _notifyIcon.Icon = Icon.ExtractAssociatedIcon(executablePath);
             }
             catch
             {
@@ -33,12 +36,21 @@ namespace GoodbyeAhmetWPF.Services
             _notifyIcon.Text = "GoodbyeAhmet";
         }
 
+        public void EnsureVisible()
+        {
+            try { _notifyIcon.Visible = true; }
+            catch { /* ignore */ }
+        }
+
         public void SetDoubleClickAction(Action action)
         {
-            // Remove previous handlers if any (though difficult with lambda, assuming single assignment scenario)
-            // Ideally we clear click handlers but NotifyIcon doesn't expose list elegantly.
-            // We'll just assign a new handler wrapper.
-            _notifyIcon.DoubleClick += (s, e) => action?.Invoke();
+            // Remove any previous handler so multiple invocations don't stack.
+            if (_doubleClickHandler != null)
+            {
+                _notifyIcon.DoubleClick -= _doubleClickHandler;
+            }
+            _doubleClickHandler = (s, e) => action?.Invoke();
+            _notifyIcon.DoubleClick += _doubleClickHandler;
         }
 
         public void AddContextMenuItem(string text, Action action)

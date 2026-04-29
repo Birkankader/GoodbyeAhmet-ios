@@ -22,9 +22,16 @@
     "SettingsReset": "Definições redefinidas.",
     "AdjustParameters": "Ajustar parâmetros de ligação",
     "AdvancedParameters": "PARÂMETROS AVANÇADOS",
-    "Connected": "LIGADO",
-    "Disconnected": "DESLIGADO",
+    "Connected": "Conectado",
+    "Disconnected": "Desconectado",
     "Using": "A usar: {0}",
     "About": "Sobre",
-    "AboutContent": "Goodbye Ahmet - Ferramenta de Segurança DPI\nVersão 1.0\n\nGoodbye Ahmet é uma interface gráfica desenhada para o ajudar a contornar sistemas de Inspeção Profunda de Pacotes (DPI) e aceder livremente a sites bloqueados.\n\nEsta aplicação é baseada no projeto GoodbyeDPI.\n\nCréditos:\nGoodbyeDPI por ValdikSS\nhttps://github.com/ValdikSS/GoodbyeDPI"
+    "AboutContent": "Goodbye Ahmet - Ferramenta de Segurança DPI\nVersão 1.0\n\nGoodbye Ahmet é uma interface gráfica desenhada para o ajudar a contornar sistemas de Inspeção Profunda de Pacotes (DPI) e aceder livremente a sites bloqueados.\n\nEsta aplicação é baseada no projeto GoodbyeDPI.\n\nCréditos:\nGoodbyeDPI por ValdikSS\nhttps://github.com/ValdikSS/GoodbyeDPI",
+    "AdBlockTitle": "BLOQUEIO DE ANÚNCIOS (DNS SINKHOLE)",
+    "EnableAdBlocker": "Ativar bloqueio de anúncios",
+    "BlocklistUrl": "URL da lista de bloqueio",
+    "LoadList": "Carregar lista",
+    "NoBlocklistLoaded": "Nenhuma lista carregada",
+    "DomainsLoaded": "{0} domínios carregados",
+    "DownloadingBlocklist": "A transferir lista de bloqueio…"
 }
