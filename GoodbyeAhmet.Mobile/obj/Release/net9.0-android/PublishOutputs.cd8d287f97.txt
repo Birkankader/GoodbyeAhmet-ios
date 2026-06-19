@@ -1,4 +1,0 @@
-D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\bin\Release\net9.0-android\publish\com.goodbyeahmet.dpi-Signed.aab
-D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\bin\Release\net9.0-android\publish\com.goodbyeahmet.dpi.aab
-D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\bin\Release\net9.0-android\publish\com.goodbyeahmet.dpi-Signed.apk
-D:\GitHub\GoodbyeAhmet\GoodbyeAhmet.Mobile\bin\Release\net9.0-android\publish\_Microsoft.Android.Resource.Designer.dll
