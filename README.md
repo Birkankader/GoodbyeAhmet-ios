@@ -1,15 +1,18 @@
-<h1>Goodbye Ahmet</h1>
+# GoodbyeAhmet iOS
 
-This application works using the GoodbyeDPI application. Its main purpose is to hide the GoodbyeDPI application interface from the taskbar and make it a Tray icon.
+SwiftUI ile yazilmis native iOS DPI bypass uygulamasi. Gomulu Packet Tunnel Extension, TLS ClientHello paketlerini boler, DNS yonlendirmesi yapar ve istege bagli hosts tabanli reklam engelleme uygular.
 
-<h2>How to use?</h2>
-<ol>
-<li>Make sure <b>.NET 8 Runtime</b> is installed (<a href="https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-8.0.10-windows-x64-installer">Direct Download</a>)</li>
-<li>You must start the application as Administrator.</li>
-</ol>
+## Xcode'da acma
 
-<h2>Credits</h2>
+1. `GoodbyeAhmet.xcodeproj` dosyasini Xcode 26.3 veya daha yeni bir surumle ac.
+2. `GoodbyeAhmet` scheme'ini ve iPhone'unu sec.
+3. Telefonun kilidini acip Run dugmesine bas.
+4. Ilk baglantida iOS'un VPN yapilandirmasi ekleme iznini onayla.
 
-GoodbyeDPI GitHub: https://github.com/ValdikSS/GoodbyeDPI
+Network Extension yetkili provisioning profilleri `project.yml` icinde tanimlidir. Projeyi yeniden uretmek gerekirse `xcodegen generate` calistirilabilir.
 
-Project Logo: Ainul Muttakin.
+## Yapi
+
+- `GoodbyeAhmet/`: SwiftUI uygulamasi, ayarlar ve VPN yoneticisi
+- `TunnelExtension/`: Packet Tunnel, TCP/UDP aktarimi, DPI bypass ve adblock
+- `GoodbyeAhmet.xcodeproj/`: Dogrudan Xcode'da acilabilir proje

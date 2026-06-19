@@ -1,0 +1,63 @@
+name: GoodbyeAhmet
+options:
+  bundleIdPrefix: com.birkankader
+  deploymentTarget:
+    iOS: "15.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    DEVELOPMENT_TEAM: 7K4V3H32VN
+    CODE_SIGN_STYLE: Automatic
+    CURRENT_PROJECT_VERSION: 1
+    MARKETING_VERSION: 1.0.0
+    IPHONEOS_DEPLOYMENT_TARGET: "15.0"
+targets:
+  GoodbyeAhmet:
+    type: application
+    platform: iOS
+    sources:
+      - path: GoodbyeAhmet
+        excludes:
+          - "**/*.plist"
+          - "**/*.entitlements"
+    resources:
+      - path: GoodbyeAhmet/Resources
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.birkankader.dpi
+        PRODUCT_NAME: GoodbyeAhmet
+        INFOPLIST_FILE: GoodbyeAhmet/Info.plist
+        CODE_SIGN_ENTITLEMENTS: GoodbyeAhmet/GoodbyeAhmet.entitlements
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        TARGETED_DEVICE_FAMILY: "1,2"
+        CODE_SIGN_STYLE: Manual
+        PROVISIONING_PROFILE: ccb5274a-edb5-4198-a022-b689f18c92b4
+    dependencies:
+      - target: GoodbyeAhmetTunnel
+        embed: true
+    scheme:
+      testTargets: []
+  GoodbyeAhmetTunnel:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: TunnelExtension
+        excludes:
+          - "**/*.plist"
+          - "**/*.entitlements"
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.birkankader.dpi.extension
+        PRODUCT_NAME: GoodbyeAhmetTunnel
+        INFOPLIST_FILE: TunnelExtension/Info.plist
+        CODE_SIGN_ENTITLEMENTS: TunnelExtension/TunnelExtension.entitlements
+        SKIP_INSTALL: YES
+        TARGETED_DEVICE_FAMILY: "1,2"
+        APPLICATION_EXTENSION_API_ONLY: YES
+        SWIFT_STRICT_CONCURRENCY: minimal
+        CODE_SIGN_STYLE: Manual
+        PROVISIONING_PROFILE: 426e6de4-181f-483b-b58d-d79f29799aae
+    dependencies:
+      - sdk: NetworkExtension.framework

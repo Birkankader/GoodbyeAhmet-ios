@@ -1,0 +1,547 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0BBA34F746963A09A66AD9BA /* PacketTunnelProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 251C2F04AD26E4A204545692 /* PacketTunnelProvider.swift */; };
+		10D4EC5E7DC114F5A996FD31 /* DNSBlocklist.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECE3DE4115167C56CDF062D8 /* DNSBlocklist.swift */; };
+		15D0FC845B424F5DE3D78239 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 313CB1580EDADF6FEC09DF7A /* Assets.xcassets */; };
+		2857377A68BCDECC1599E54E /* VPNManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7264B6699A4BA304854B67C3 /* VPNManager.swift */; };
+		2AC84E71D1BA8DBD70CF4DE9 /* GoodbyeAhmetTunnel.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = C58B4AD71D83755D042C955F /* GoodbyeAhmetTunnel.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		2EDE9D6671A0E979E7032221 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7486B87E7E40F6B985C18D2 /* AppSettings.swift */; };
+		45949704043F3246FC420A36 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440C2AAFAC7177A32FEF7F8A /* ContentView.swift */; };
+		45E46819B55428A522840F29 /* TunnelUDPSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = D014788B0DA37F90BF6B360F /* TunnelUDPSession.swift */; };
+		4A8B3A95778BCF9954320568 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23C23E98EF03EF6DAEDB3C0E /* SettingsView.swift */; };
+		4B25BC4FC39D556BDF0F3E4F /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 369127AE10EDD38B149D803D /* NetworkExtension.framework */; };
+		57C728227D60C3AB0BECDD13 /* TunnelSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1015467E7B8111B65BECCAD /* TunnelSettings.swift */; };
+		599EF155716A3CB57A62AD68 /* DNSPacket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 675101CF1014DF597708A97F /* DNSPacket.swift */; };
+		641321A634B071090A74E592 /* TunnelTCPSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5AA8F8CA5D8F154825E4D3C /* TunnelTCPSession.swift */; };
+		A5BB06AD4312DE47972D2E04 /* PacketBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 644FDE0C7E849CA2FBBE53F4 /* PacketBuilder.swift */; };
+		B9F2960F10B6425B1F4C84AA /* VPNPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F5EEC8108292D125115B11 /* VPNPreset.swift */; };
+		E99DBA9662D36EAF502FA3A1 /* GoodbyeAhmetApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 143C69DD9208E2E6DCF1A180 /* GoodbyeAhmetApp.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		CD4963DB7543B3E49D0A86D7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 68054385868B1E17DE3879B7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4EC97B6C5FD9B0F21E207EA5;
+			remoteInfo = GoodbyeAhmetTunnel;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		9AAC5DB72FF1D53371AF471F /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				2AC84E71D1BA8DBD70CF4DE9 /* GoodbyeAhmetTunnel.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		143C69DD9208E2E6DCF1A180 /* GoodbyeAhmetApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoodbyeAhmetApp.swift; sourceTree = "<group>"; };
+		23C23E98EF03EF6DAEDB3C0E /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		251C2F04AD26E4A204545692 /* PacketTunnelProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacketTunnelProvider.swift; sourceTree = "<group>"; };
+		313CB1580EDADF6FEC09DF7A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		369127AE10EDD38B149D803D /* NetworkExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetworkExtension.framework; path = System/Library/Frameworks/NetworkExtension.framework; sourceTree = SDKROOT; };
+		440C2AAFAC7177A32FEF7F8A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		644FDE0C7E849CA2FBBE53F4 /* PacketBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacketBuilder.swift; sourceTree = "<group>"; };
+		675101CF1014DF597708A97F /* DNSPacket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DNSPacket.swift; sourceTree = "<group>"; };
+		7264B6699A4BA304854B67C3 /* VPNManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNManager.swift; sourceTree = "<group>"; };
+		A7486B87E7E40F6B985C18D2 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
+		C1015467E7B8111B65BECCAD /* TunnelSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelSettings.swift; sourceTree = "<group>"; };
+		C58B4AD71D83755D042C955F /* GoodbyeAhmetTunnel.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = GoodbyeAhmetTunnel.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		C8C0AF2626DD00BA17F34A5B /* GoodbyeAhmet.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = GoodbyeAhmet.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C9F5EEC8108292D125115B11 /* VPNPreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNPreset.swift; sourceTree = "<group>"; };
+		D014788B0DA37F90BF6B360F /* TunnelUDPSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelUDPSession.swift; sourceTree = "<group>"; };
+		D5AA8F8CA5D8F154825E4D3C /* TunnelTCPSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelTCPSession.swift; sourceTree = "<group>"; };
+		ECE3DE4115167C56CDF062D8 /* DNSBlocklist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DNSBlocklist.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		B8050981186001901BC571A9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4B25BC4FC39D556BDF0F3E4F /* NetworkExtension.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		575434ED72F3A192825CE945 /* TunnelExtension */ = {
+			isa = PBXGroup;
+			children = (
+				ECE3DE4115167C56CDF062D8 /* DNSBlocklist.swift */,
+				675101CF1014DF597708A97F /* DNSPacket.swift */,
+				644FDE0C7E849CA2FBBE53F4 /* PacketBuilder.swift */,
+				251C2F04AD26E4A204545692 /* PacketTunnelProvider.swift */,
+				C1015467E7B8111B65BECCAD /* TunnelSettings.swift */,
+				D5AA8F8CA5D8F154825E4D3C /* TunnelTCPSession.swift */,
+				D014788B0DA37F90BF6B360F /* TunnelUDPSession.swift */,
+			);
+			path = TunnelExtension;
+			sourceTree = "<group>";
+		};
+		688014B7FE4A143B277B418D /* App */ = {
+			isa = PBXGroup;
+			children = (
+				440C2AAFAC7177A32FEF7F8A /* ContentView.swift */,
+				143C69DD9208E2E6DCF1A180 /* GoodbyeAhmetApp.swift */,
+				23C23E98EF03EF6DAEDB3C0E /* SettingsView.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		73D1DFF3586EFEC2AEAF7365 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				A7486B87E7E40F6B985C18D2 /* AppSettings.swift */,
+				7264B6699A4BA304854B67C3 /* VPNManager.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		7D96DDA0E560189BF4FAB5F1 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				369127AE10EDD38B149D803D /* NetworkExtension.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		BCEBFBB63F184830A093DAD3 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				C9F5EEC8108292D125115B11 /* VPNPreset.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		CC75DA8E4CEA864DBF151C4C /* GoodbyeAhmet */ = {
+			isa = PBXGroup;
+			children = (
+				688014B7FE4A143B277B418D /* App */,
+				BCEBFBB63F184830A093DAD3 /* Models */,
+				E58895A71AE4FC7904B6ECB4 /* Resources */,
+				73D1DFF3586EFEC2AEAF7365 /* Services */,
+			);
+			path = GoodbyeAhmet;
+			sourceTree = "<group>";
+		};
+		D76EF79A858FA5E8FE8523F5 = {
+			isa = PBXGroup;
+			children = (
+				CC75DA8E4CEA864DBF151C4C /* GoodbyeAhmet */,
+				575434ED72F3A192825CE945 /* TunnelExtension */,
+				7D96DDA0E560189BF4FAB5F1 /* Frameworks */,
+				E3BFA3DAD8C187735D8F4E21 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		E3BFA3DAD8C187735D8F4E21 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C8C0AF2626DD00BA17F34A5B /* GoodbyeAhmet.app */,
+				C58B4AD71D83755D042C955F /* GoodbyeAhmetTunnel.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E58895A71AE4FC7904B6ECB4 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				313CB1580EDADF6FEC09DF7A /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		4EC97B6C5FD9B0F21E207EA5 /* GoodbyeAhmetTunnel */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 08FFC51C87835E9606E8DC26 /* Build configuration list for PBXNativeTarget "GoodbyeAhmetTunnel" */;
+			buildPhases = (
+				E950A4BCDF39BEABF4A22808 /* Sources */,
+				B8050981186001901BC571A9 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = GoodbyeAhmetTunnel;
+			packageProductDependencies = (
+			);
+			productName = GoodbyeAhmetTunnel;
+			productReference = C58B4AD71D83755D042C955F /* GoodbyeAhmetTunnel.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		EB2595F6766C2AEFB40057B2 /* GoodbyeAhmet */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1DBDC7E40F270EB4469F9DDF /* Build configuration list for PBXNativeTarget "GoodbyeAhmet" */;
+			buildPhases = (
+				0C265CF8640AB3819D894228 /* Sources */,
+				F6A24AD9BB674BFF4CDA28A6 /* Resources */,
+				9AAC5DB72FF1D53371AF471F /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				9E0275538694C391EF93A091 /* PBXTargetDependency */,
+			);
+			name = GoodbyeAhmet;
+			packageProductDependencies = (
+			);
+			productName = GoodbyeAhmet;
+			productReference = C8C0AF2626DD00BA17F34A5B /* GoodbyeAhmet.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		68054385868B1E17DE3879B7 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					4EC97B6C5FD9B0F21E207EA5 = {
+						DevelopmentTeam = 7K4V3H32VN;
+						ProvisioningStyle = Manual;
+					};
+					EB2595F6766C2AEFB40057B2 = {
+						DevelopmentTeam = 7K4V3H32VN;
+						ProvisioningStyle = Manual;
+					};
+				};
+			};
+			buildConfigurationList = AA3F6EE0194A30BE6CAA2FA9 /* Build configuration list for PBXProject "GoodbyeAhmet" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = D76EF79A858FA5E8FE8523F5;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = E3BFA3DAD8C187735D8F4E21 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				EB2595F6766C2AEFB40057B2 /* GoodbyeAhmet */,
+				4EC97B6C5FD9B0F21E207EA5 /* GoodbyeAhmetTunnel */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F6A24AD9BB674BFF4CDA28A6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				15D0FC845B424F5DE3D78239 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		0C265CF8640AB3819D894228 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2EDE9D6671A0E979E7032221 /* AppSettings.swift in Sources */,
+				45949704043F3246FC420A36 /* ContentView.swift in Sources */,
+				E99DBA9662D36EAF502FA3A1 /* GoodbyeAhmetApp.swift in Sources */,
+				4A8B3A95778BCF9954320568 /* SettingsView.swift in Sources */,
+				2857377A68BCDECC1599E54E /* VPNManager.swift in Sources */,
+				B9F2960F10B6425B1F4C84AA /* VPNPreset.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E950A4BCDF39BEABF4A22808 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				10D4EC5E7DC114F5A996FD31 /* DNSBlocklist.swift in Sources */,
+				599EF155716A3CB57A62AD68 /* DNSPacket.swift in Sources */,
+				A5BB06AD4312DE47972D2E04 /* PacketBuilder.swift in Sources */,
+				0BBA34F746963A09A66AD9BA /* PacketTunnelProvider.swift in Sources */,
+				57C728227D60C3AB0BECDD13 /* TunnelSettings.swift in Sources */,
+				641321A634B071090A74E592 /* TunnelTCPSession.swift in Sources */,
+				45E46819B55428A522840F29 /* TunnelUDPSession.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		9E0275538694C391EF93A091 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4EC97B6C5FD9B0F21E207EA5 /* GoodbyeAhmetTunnel */;
+			targetProxy = CD4963DB7543B3E49D0A86D7 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		024C82915B560E29F0093E7D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = GoodbyeAhmet/GoodbyeAhmet.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				INFOPLIST_FILE = GoodbyeAhmet/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.birkankader.dpi;
+				PRODUCT_NAME = GoodbyeAhmet;
+				PROVISIONING_PROFILE = "ccb5274a-edb5-4198-a022-b689f18c92b4";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		28EAE2A76ED68DBF969F5E3D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 7K4V3H32VN;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.0.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		33FF197CE897023ED6D40EC6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_ENTITLEMENTS = TunnelExtension/TunnelExtension.entitlements;
+				CODE_SIGN_STYLE = Manual;
+				INFOPLIST_FILE = TunnelExtension/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.birkankader.dpi.extension;
+				PRODUCT_NAME = GoodbyeAhmetTunnel;
+				PROVISIONING_PROFILE = "426e6de4-181f-483b-b58d-d79f29799aae";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_STRICT_CONCURRENCY = minimal;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		4E845039BE06E8F86BD40786 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = GoodbyeAhmet/GoodbyeAhmet.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				INFOPLIST_FILE = GoodbyeAhmet/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.birkankader.dpi;
+				PRODUCT_NAME = GoodbyeAhmet;
+				PROVISIONING_PROFILE = "ccb5274a-edb5-4198-a022-b689f18c92b4";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		6D28003AC160D07B09383B85 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 7K4V3H32VN;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.0.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		F7361C8B884B55879D8D7F16 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_ENTITLEMENTS = TunnelExtension/TunnelExtension.entitlements;
+				CODE_SIGN_STYLE = Manual;
+				INFOPLIST_FILE = TunnelExtension/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.birkankader.dpi.extension;
+				PRODUCT_NAME = GoodbyeAhmetTunnel;
+				PROVISIONING_PROFILE = "426e6de4-181f-483b-b58d-d79f29799aae";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_STRICT_CONCURRENCY = minimal;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		08FFC51C87835E9606E8DC26 /* Build configuration list for PBXNativeTarget "GoodbyeAhmetTunnel" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				33FF197CE897023ED6D40EC6 /* Debug */,
+				F7361C8B884B55879D8D7F16 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		1DBDC7E40F270EB4469F9DDF /* Build configuration list for PBXNativeTarget "GoodbyeAhmet" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4E845039BE06E8F86BD40786 /* Debug */,
+				024C82915B560E29F0093E7D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		AA3F6EE0194A30BE6CAA2FA9 /* Build configuration list for PBXProject "GoodbyeAhmet" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6D28003AC160D07B09383B85 /* Debug */,
+				28EAE2A76ED68DBF969F5E3D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 68054385868B1E17DE3879B7 /* Project object */;
+}
