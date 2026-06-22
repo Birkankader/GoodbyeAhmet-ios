@@ -4,26 +4,48 @@ enum DNSPacket {
     static func queryDomain(_ payload: [UInt8]) -> String? {
         guard payload.count >= 13, payload[2] & 0x80 == 0, payload[2] & 0x78 == 0 else { return nil }
         let questionCount = Int(payload[4]) << 8 | Int(payload[5])
-        guard questionCount > 0 else { return nil }
+        guard questionCount == 1 else { return nil }
 
         var offset = 12
         var labels: [String] = []
+        var reachedTerminator = false
         while offset < payload.count {
             let length = Int(payload[offset])
-            if length == 0 { break }
+            if length == 0 {
+                offset += 1
+                guard offset + 4 <= payload.count else { return nil }
+                reachedTerminator = true
+                break
+            }
             guard length <= 63, length & 0xc0 == 0 else { return nil }
             offset += 1
             guard offset + length <= payload.count else { return nil }
-            labels.append(String(decoding: payload[offset..<(offset + length)], as: UTF8.self))
+            let label = payload[offset..<(offset + length)]
+            guard label.allSatisfy({ byte in
+                (byte >= 48 && byte <= 57) ||
+                    (byte >= 65 && byte <= 90) ||
+                    (byte >= 97 && byte <= 122) ||
+                    byte == 45 || byte == 95
+            }) else { return nil }
+            labels.append(String(decoding: label, as: UTF8.self))
             offset += length
         }
-        return labels.isEmpty ? nil : labels.joined(separator: ".")
+        guard reachedTerminator else { return nil }
+        let queryClass = Int(payload[offset + 2]) << 8 | Int(payload[offset + 3])
+        guard queryClass == 1 else { return nil }
+        let domain = labels.joined(separator: ".")
+        return !domain.isEmpty && domain.utf8.count <= 253 ? domain : nil
     }
 
     static func blockedResponse(for query: [UInt8]) -> Data? {
-        guard let questionEnd = questionSectionEnd(query) else { return nil }
+        guard query.count >= 13,
+              query[4] == 0,
+              query[5] == 1,
+              let questionEnd = questionSectionEnd(query) else { return nil }
         let typeOffset = questionEnd - 4
         let queryType = Int(query[typeOffset]) << 8 | Int(query[typeOffset + 1])
+        let queryClass = Int(query[typeOffset + 2]) << 8 | Int(query[typeOffset + 3])
+        guard queryClass == 1 else { return nil }
         guard queryType == 1 || queryType == 28 else {
             var response = Array(query.prefix(questionEnd))
             response[2] = 0x85
@@ -62,11 +84,8 @@ enum DNSPacket {
                 offset += 1
                 break
             }
-            if length & 0xc0 == 0xc0 {
-                offset += 2
-                break
-            }
-            guard length <= 63 else { return nil }
+            guard length <= 63, length & 0xc0 == 0 else { return nil }
+            guard offset + 1 + length <= payload.count else { return nil }
             offset += 1 + length
         }
         offset += 4

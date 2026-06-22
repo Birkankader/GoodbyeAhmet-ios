@@ -17,22 +17,30 @@ struct TunnelSettings {
         protocolConfiguration: NETunnelProviderProtocol?
     ) -> TunnelSettings {
         let provider = protocolConfiguration?.providerConfiguration ?? [:]
-        let presetKey = string("PresetKey", options: options, provider: provider) ?? "default"
+        let requestedPreset = string("PresetKey", options: options, provider: provider) ?? "default"
+        let presetKey = knownPresetKeys.contains(requestedPreset) ? requestedPreset : "default"
         var settings = preset(presetKey)
 
         settings.splitClientHello = bool("SplitClientHello", options: options, provider: provider) ?? settings.splitClientHello
-        settings.splitPosition = max(1, integer("SplitPosition", options: options, provider: provider) ?? settings.splitPosition)
+        settings.splitPosition = min(128, max(1, integer("SplitPosition", options: options, provider: provider) ?? settings.splitPosition))
         settings.mixHostCase = bool("MixHostCase", options: options, provider: provider) ?? settings.mixHostCase
-        settings.fakeTTL = max(0, integer("FakeTtl", options: options, provider: provider) ?? settings.fakeTTL)
-        settings.dnsRedirectPort = UInt16(clamping: integer("DnsRedirectPort", options: options, provider: provider) ?? Int(settings.dnsRedirectPort))
+        settings.fakeTTL = min(255, max(0, integer("FakeTtl", options: options, provider: provider) ?? settings.fakeTTL))
+        let requestedPort = integer("DnsRedirectPort", options: options, provider: provider) ?? Int(settings.dnsRedirectPort)
+        settings.dnsRedirectPort = UInt16((1...65_535).contains(requestedPort) ? requestedPort : 53)
         settings.adBlockEnabled = bool("AdBlockEnabled", options: options, provider: provider) ?? settings.adBlockEnabled
-        settings.adBlockListURL = string("AdBlockListUrl", options: options, provider: provider) ?? settings.adBlockListURL
+        if let listURL = string("AdBlockListUrl", options: options, provider: provider), listURL.utf8.count <= 2_048 {
+            settings.adBlockListURL = listURL
+        }
 
         if let address = string("DnsRedirectAddress", options: options, provider: provider) {
             settings.dnsRedirectAddress = IPv4Address(address)
         }
         return settings
     }
+
+    private static let knownPresetKeys: Set<String> = [
+        "default", "aggressive", "dns_redirect", "turkey", "turkey_so", "russia", "custom_host"
+    ]
 
     private static func preset(_ key: String) -> TunnelSettings {
         let defaultList = DNSBlocklist.defaultListURL

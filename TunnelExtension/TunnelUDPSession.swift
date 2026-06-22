@@ -2,6 +2,9 @@ import Foundation
 import Network
 
 final class TunnelUDPSession {
+    private static let maximumQueuedDatagrams = 32
+    private static let maximumQueuedBytes = 64 * 1_024
+
     private weak var provider: PacketTunnelProvider?
     private let clientAddress: IPv4Address
     private let clientPort: UInt16
@@ -14,7 +17,9 @@ final class TunnelUDPSession {
     private var isReady = false
     private var isClosed = false
     private var hasStarted = false
-    private var pending: [Data] = []
+    private var outgoing: [Data] = []
+    private var queuedBytes = 0
+    private var writeInProgress = false
     private(set) var lastActivity = Date()
 
     init(
@@ -49,12 +54,10 @@ final class TunnelUDPSession {
             switch state {
             case .ready:
                 self.isReady = true
-                let queued = self.pending
-                self.pending.removeAll(keepingCapacity: false)
-                queued.forEach { self.sendOnQueue($0) }
+                self.processNextSend()
                 self.receiveNext()
             case .failed(let error):
-                NSLog("UDP session failed: %@", String(describing: error))
+                TunnelLog.debug("UDP session failed: \(error)")
                 self.closeOnQueue()
             case .cancelled:
                 self.provider?.removeUDPSession(key: self.key, session: self)
@@ -69,11 +72,14 @@ final class TunnelUDPSession {
         queue.async { [weak self] in
             guard let self, !self.isClosed else { return }
             self.lastActivity = Date()
-            if self.isReady {
-                self.sendOnQueue(payload)
-            } else if self.pending.count < 32 {
-                self.pending.append(payload)
-            }
+            let queuedDatagramCount = self.outgoing.count + (self.writeInProgress ? 1 : 0)
+            guard !payload.isEmpty,
+                  payload.count <= PacketTunnelProvider.tunnelMTU - 28,
+                  queuedDatagramCount < Self.maximumQueuedDatagrams,
+                  self.queuedBytes + payload.count <= Self.maximumQueuedBytes else { return }
+            self.outgoing.append(payload)
+            self.queuedBytes += payload.count
+            self.processNextSend()
         }
     }
 
@@ -88,11 +94,20 @@ final class TunnelUDPSession {
         }
     }
 
-    private func sendOnQueue(_ payload: Data) {
+    private func processNextSend() {
+        guard isReady, !writeInProgress, !isClosed, !outgoing.isEmpty else { return }
+        writeInProgress = true
+        let payload = outgoing.removeFirst()
         connection.send(content: payload, completion: .contentProcessed { [weak self] error in
-            guard let self, let error else { return }
-            NSLog("UDP write failed: %@", String(describing: error))
-            self.closeOnQueue()
+            guard let self else { return }
+            self.queuedBytes = max(0, self.queuedBytes - payload.count)
+            self.writeInProgress = false
+            if let error {
+                TunnelLog.debug("UDP write failed: \(error)")
+                self.closeOnQueue()
+            } else {
+                self.processNextSend()
+            }
         })
     }
 
@@ -101,11 +116,13 @@ final class TunnelUDPSession {
         connection.receiveMessage { [weak self] data, _, _, error in
             guard let self, !self.isClosed else { return }
             if let error {
-                NSLog("UDP read failed: %@", String(describing: error))
+                TunnelLog.debug("UDP read failed: \(error)")
                 self.closeOnQueue()
                 return
             }
-            if let data, !data.isEmpty {
+            if let data,
+               !data.isEmpty,
+               data.count <= PacketTunnelProvider.tunnelMTU - 28 {
                 self.lastActivity = Date()
                 self.provider?.writeUDPPacket(
                     source: self.destinationAddress,
@@ -122,6 +139,9 @@ final class TunnelUDPSession {
     private func closeOnQueue() {
         guard !isClosed else { return }
         isClosed = true
+        outgoing.removeAll(keepingCapacity: false)
+        queuedBytes = 0
+        writeInProgress = false
         connection.stateUpdateHandler = nil
         connection.cancel()
         provider?.removeUDPSession(key: key, session: self)

@@ -16,3 +16,8 @@ Network Extension yetkili provisioning profilleri `project.yml` icinde tanimlidi
 - `GoodbyeAhmet/`: SwiftUI uygulamasi, ayarlar ve VPN yoneticisi
 - `TunnelExtension/`: Packet Tunnel, TCP/UDP aktarimi, DPI bypass ve adblock
 - `GoodbyeAhmet.xcodeproj/`: Dogrudan Xcode'da acilabilir proje
+
+## App Store
+
+- Gizlilik politikasi: [`PRIVACY.md`](PRIVACY.md)
+- Gonderim kontrol listesi: [`APP_STORE_SUBMISSION.md`](APP_STORE_SUBMISSION.md)

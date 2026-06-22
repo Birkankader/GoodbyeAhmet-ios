@@ -35,6 +35,11 @@ struct SettingsView: View {
                     .textInputAutocapitalization(.never)
                     .disableAutocorrection(true)
                     .keyboardType(.URL)
+                if !settings.isBlocklistURLValid {
+                    Label("Yalnızca kimlik bilgisi içermeyen HTTPS adresleri kabul edilir.", systemImage: "exclamationmark.triangle")
+                        .font(.footnote)
+                        .foregroundColor(.orange)
+                }
             } header: {
                 Text("Reklam engelleme")
             } footer: {
@@ -43,6 +48,9 @@ struct SettingsView: View {
 
             Section("Uygulama") {
                 Toggle("Uygulama acilinca baglan", isOn: $settings.activateOnStart)
+                NavigationLink("Gizlilik Politikası") {
+                    PrivacyPolicyView()
+                }
             }
         }
         .navigationTitle("Ayarlar")
