@@ -13,6 +13,7 @@
 		2857377A68BCDECC1599E54E /* VPNManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7264B6699A4BA304854B67C3 /* VPNManager.swift */; };
 		2AC84E71D1BA8DBD70CF4DE9 /* GoodbyeAhmetTunnel.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = C58B4AD71D83755D042C955F /* GoodbyeAhmetTunnel.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		2EDE9D6671A0E979E7032221 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7486B87E7E40F6B985C18D2 /* AppSettings.swift */; };
+		3816C6656500C22D4C29083E /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = AA82C83AE604B6F2A41BD726 /* PrivacyInfo.xcprivacy */; };
 		45949704043F3246FC420A36 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440C2AAFAC7177A32FEF7F8A /* ContentView.swift */; };
 		45E46819B55428A522840F29 /* TunnelUDPSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = D014788B0DA37F90BF6B360F /* TunnelUDPSession.swift */; };
 		4A8B3A95778BCF9954320568 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23C23E98EF03EF6DAEDB3C0E /* SettingsView.swift */; };
@@ -22,7 +23,10 @@
 		641321A634B071090A74E592 /* TunnelTCPSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5AA8F8CA5D8F154825E4D3C /* TunnelTCPSession.swift */; };
 		A5BB06AD4312DE47972D2E04 /* PacketBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 644FDE0C7E849CA2FBBE53F4 /* PacketBuilder.swift */; };
 		B9F2960F10B6425B1F4C84AA /* VPNPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F5EEC8108292D125115B11 /* VPNPreset.swift */; };
+		D1C65812319137E2ECAD41FF /* TunnelLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = C97BEA528BC2380504BDEB92 /* TunnelLog.swift */; };
+		E137DD34022DF3B6415C76FF /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 3203C8830FC109B2970E7930 /* PrivacyInfo.xcprivacy */; };
 		E99DBA9662D36EAF502FA3A1 /* GoodbyeAhmetApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 143C69DD9208E2E6DCF1A180 /* GoodbyeAhmetApp.swift */; };
+		F793A39C0C4EEE5498B33DB2 /* PrivacyViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3CE938D0B11505FD9C70E2A /* PrivacyViews.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,15 +58,19 @@
 		23C23E98EF03EF6DAEDB3C0E /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		251C2F04AD26E4A204545692 /* PacketTunnelProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacketTunnelProvider.swift; sourceTree = "<group>"; };
 		313CB1580EDADF6FEC09DF7A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		3203C8830FC109B2970E7930 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		369127AE10EDD38B149D803D /* NetworkExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetworkExtension.framework; path = System/Library/Frameworks/NetworkExtension.framework; sourceTree = SDKROOT; };
 		440C2AAFAC7177A32FEF7F8A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		644FDE0C7E849CA2FBBE53F4 /* PacketBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacketBuilder.swift; sourceTree = "<group>"; };
 		675101CF1014DF597708A97F /* DNSPacket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DNSPacket.swift; sourceTree = "<group>"; };
 		7264B6699A4BA304854B67C3 /* VPNManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNManager.swift; sourceTree = "<group>"; };
+		A3CE938D0B11505FD9C70E2A /* PrivacyViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyViews.swift; sourceTree = "<group>"; };
 		A7486B87E7E40F6B985C18D2 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
+		AA82C83AE604B6F2A41BD726 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		C1015467E7B8111B65BECCAD /* TunnelSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelSettings.swift; sourceTree = "<group>"; };
 		C58B4AD71D83755D042C955F /* GoodbyeAhmetTunnel.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = GoodbyeAhmetTunnel.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		C8C0AF2626DD00BA17F34A5B /* GoodbyeAhmet.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = GoodbyeAhmet.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C97BEA528BC2380504BDEB92 /* TunnelLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelLog.swift; sourceTree = "<group>"; };
 		C9F5EEC8108292D125115B11 /* VPNPreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VPNPreset.swift; sourceTree = "<group>"; };
 		D014788B0DA37F90BF6B360F /* TunnelUDPSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelUDPSession.swift; sourceTree = "<group>"; };
 		D5AA8F8CA5D8F154825E4D3C /* TunnelTCPSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelTCPSession.swift; sourceTree = "<group>"; };
@@ -88,6 +96,8 @@
 				675101CF1014DF597708A97F /* DNSPacket.swift */,
 				644FDE0C7E849CA2FBBE53F4 /* PacketBuilder.swift */,
 				251C2F04AD26E4A204545692 /* PacketTunnelProvider.swift */,
+				AA82C83AE604B6F2A41BD726 /* PrivacyInfo.xcprivacy */,
+				C97BEA528BC2380504BDEB92 /* TunnelLog.swift */,
 				C1015467E7B8111B65BECCAD /* TunnelSettings.swift */,
 				D5AA8F8CA5D8F154825E4D3C /* TunnelTCPSession.swift */,
 				D014788B0DA37F90BF6B360F /* TunnelUDPSession.swift */,
@@ -100,6 +110,7 @@
 			children = (
 				440C2AAFAC7177A32FEF7F8A /* ContentView.swift */,
 				143C69DD9208E2E6DCF1A180 /* GoodbyeAhmetApp.swift */,
+				A3CE938D0B11505FD9C70E2A /* PrivacyViews.swift */,
 				23C23E98EF03EF6DAEDB3C0E /* SettingsView.swift */,
 			);
 			path = App;
@@ -164,6 +175,7 @@
 			isa = PBXGroup;
 			children = (
 				313CB1580EDADF6FEC09DF7A /* Assets.xcassets */,
+				3203C8830FC109B2970E7930 /* PrivacyInfo.xcprivacy */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -176,6 +188,7 @@
 			buildConfigurationList = 08FFC51C87835E9606E8DC26 /* Build configuration list for PBXNativeTarget "GoodbyeAhmetTunnel" */;
 			buildPhases = (
 				E950A4BCDF39BEABF4A22808 /* Sources */,
+				A975988D9BF0965EC76E030C /* Resources */,
 				B8050981186001901BC571A9 /* Frameworks */,
 			);
 			buildRules = (
@@ -220,11 +233,9 @@
 				TargetAttributes = {
 					4EC97B6C5FD9B0F21E207EA5 = {
 						DevelopmentTeam = 7K4V3H32VN;
-						ProvisioningStyle = Manual;
 					};
 					EB2595F6766C2AEFB40057B2 = {
 						DevelopmentTeam = 7K4V3H32VN;
-						ProvisioningStyle = Manual;
 					};
 				};
 			};
@@ -249,11 +260,20 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		A975988D9BF0965EC76E030C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3816C6656500C22D4C29083E /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F6A24AD9BB674BFF4CDA28A6 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				15D0FC845B424F5DE3D78239 /* Assets.xcassets in Resources */,
+				E137DD34022DF3B6415C76FF /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -267,6 +287,7 @@
 				2EDE9D6671A0E979E7032221 /* AppSettings.swift in Sources */,
 				45949704043F3246FC420A36 /* ContentView.swift in Sources */,
 				E99DBA9662D36EAF502FA3A1 /* GoodbyeAhmetApp.swift in Sources */,
+				F793A39C0C4EEE5498B33DB2 /* PrivacyViews.swift in Sources */,
 				4A8B3A95778BCF9954320568 /* SettingsView.swift in Sources */,
 				2857377A68BCDECC1599E54E /* VPNManager.swift in Sources */,
 				B9F2960F10B6425B1F4C84AA /* VPNPreset.swift in Sources */,
@@ -281,6 +302,7 @@
 				599EF155716A3CB57A62AD68 /* DNSPacket.swift in Sources */,
 				A5BB06AD4312DE47972D2E04 /* PacketBuilder.swift in Sources */,
 				0BBA34F746963A09A66AD9BA /* PacketTunnelProvider.swift in Sources */,
+				D1C65812319137E2ECAD41FF /* TunnelLog.swift in Sources */,
 				57C728227D60C3AB0BECDD13 /* TunnelSettings.swift in Sources */,
 				641321A634B071090A74E592 /* TunnelTCPSession.swift in Sources */,
 				45E46819B55428A522840F29 /* TunnelUDPSession.swift in Sources */,
@@ -305,7 +327,6 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = GoodbyeAhmet/GoodbyeAhmet.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
 				INFOPLIST_FILE = GoodbyeAhmet/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -313,8 +334,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.birkankader.dpi;
 				PRODUCT_NAME = GoodbyeAhmet;
-				PROVISIONING_PROFILE = "ccb5274a-edb5-4198-a022-b689f18c92b4";
 				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -323,6 +344,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -355,12 +377,16 @@
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7K4V3H32VN;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = NO;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -375,7 +401,9 @@
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_TREAT_WARNINGS_AS_ERRORS = YES;
 				SWIFT_VERSION = 5.0;
+				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
@@ -396,6 +424,7 @@
 				PROVISIONING_PROFILE = "426e6de4-181f-483b-b58d-d79f29799aae";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_STRICT_CONCURRENCY = minimal;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -418,6 +447,7 @@
 				PRODUCT_NAME = GoodbyeAhmet;
 				PROVISIONING_PROFILE = "ccb5274a-edb5-4198-a022-b689f18c92b4";
 				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -426,6 +456,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -462,6 +493,7 @@
 				DEVELOPMENT_TEAM = 7K4V3H32VN;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -494,7 +526,6 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = TunnelExtension/TunnelExtension.entitlements;
-				CODE_SIGN_STYLE = Manual;
 				INFOPLIST_FILE = TunnelExtension/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -503,9 +534,9 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.birkankader.dpi.extension;
 				PRODUCT_NAME = GoodbyeAhmetTunnel;
-				PROVISIONING_PROFILE = "426e6de4-181f-483b-b58d-d79f29799aae";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_STRICT_CONCURRENCY = minimal;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

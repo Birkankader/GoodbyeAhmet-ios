@@ -12,6 +12,21 @@ settings:
     CURRENT_PROJECT_VERSION: 1
     MARKETING_VERSION: 1.0.0
     IPHONEOS_DEPLOYMENT_TARGET: "15.0"
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+    CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED: YES
+    CLANG_WARN_DOCUMENTATION_COMMENTS: YES
+    GCC_WARN_64_TO_32_BIT_CONVERSION: YES
+    GCC_WARN_UNDECLARED_SELECTOR: YES
+  configs:
+    Release:
+      DEAD_CODE_STRIPPING: YES
+      DEBUG_INFORMATION_FORMAT: dwarf-with-dsym
+      ENABLE_TESTABILITY: NO
+      GCC_TREAT_WARNINGS_AS_ERRORS: YES
+      SWIFT_COMPILATION_MODE: wholemodule
+      SWIFT_OPTIMIZATION_LEVEL: -O
+      SWIFT_TREAT_WARNINGS_AS_ERRORS: YES
+      VALIDATE_PRODUCT: YES
 targets:
   GoodbyeAhmet:
     type: application
@@ -32,8 +47,11 @@ targets:
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
         TARGETED_DEVICE_FAMILY: "1,2"
-        CODE_SIGN_STYLE: Manual
-        PROVISIONING_PROFILE: ccb5274a-edb5-4198-a022-b689f18c92b4
+        SUPPORTS_MACCATALYST: NO
+      configs:
+        Debug:
+          CODE_SIGN_STYLE: Manual
+          PROVISIONING_PROFILE: ccb5274a-edb5-4198-a022-b689f18c92b4
     dependencies:
       - target: GoodbyeAhmetTunnel
         embed: true
@@ -47,6 +65,8 @@ targets:
         excludes:
           - "**/*.plist"
           - "**/*.entitlements"
+    resources:
+      - path: TunnelExtension/PrivacyInfo.xcprivacy
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.birkankader.dpi.extension
@@ -57,7 +77,10 @@ targets:
         TARGETED_DEVICE_FAMILY: "1,2"
         APPLICATION_EXTENSION_API_ONLY: YES
         SWIFT_STRICT_CONCURRENCY: minimal
-        CODE_SIGN_STYLE: Manual
-        PROVISIONING_PROFILE: 426e6de4-181f-483b-b58d-d79f29799aae
+        SUPPORTS_MACCATALYST: NO
+      configs:
+        Debug:
+          CODE_SIGN_STYLE: Manual
+          PROVISIONING_PROFILE: 426e6de4-181f-483b-b58d-d79f29799aae
     dependencies:
       - sdk: NetworkExtension.framework

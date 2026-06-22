@@ -2,6 +2,9 @@ import Foundation
 import Network
 
 final class TunnelTCPSession {
+    private static let maximumBufferedBytes = 128 * 1_024
+    private static let connectionTimeout: TimeInterval = 15
+
     private enum Flag {
         static let synAck: UInt8 = 0x12
         static let ack: UInt8 = 0x10
@@ -13,6 +16,7 @@ final class TunnelTCPSession {
     private struct OutgoingChunk {
         let data: Data
         let delay: TimeInterval
+        let releasedBytes: Int
     }
 
     private weak var provider: PacketTunnelProvider?
@@ -33,6 +37,8 @@ final class TunnelTCPSession {
     private var pendingBeforeConnect: [Data] = []
     private var outgoing: [OutgoingChunk] = []
     private var writeInProgress = false
+    private var bufferedBytes = 0
+    private var connectionTimeoutWorkItem: DispatchWorkItem?
 
     init(
         provider: PacketTunnelProvider,
@@ -67,6 +73,8 @@ final class TunnelTCPSession {
             guard let self else { return }
             switch state {
             case .ready:
+                self.connectionTimeoutWorkItem?.cancel()
+                self.connectionTimeoutWorkItem = nil
                 self.isReady = true
                 let pending = self.pendingBeforeConnect
                 self.pendingBeforeConnect.removeAll(keepingCapacity: false)
@@ -81,17 +89,32 @@ final class TunnelTCPSession {
             }
         }
         connection.start(queue: queue)
+        let timeout = DispatchWorkItem { [weak self] in
+            guard let self, !self.isReady, !self.isClosed else { return }
+            self.fail("TCP connection timed out")
+        }
+        connectionTimeoutWorkItem = timeout
+        queue.asyncAfter(deadline: .now() + Self.connectionTimeout, execute: timeout)
     }
 
     func receiveClientData(_ data: Data, sequence: UInt32) {
         queue.async { [weak self] in
             guard let self, !self.isClosed else { return }
+            guard !data.isEmpty,
+                  data.count <= PacketTunnelProvider.tunnelMTU - 40,
+                  self.bufferedBytes + data.count <= Self.maximumBufferedBytes else {
+                self.fail("TCP buffer limit exceeded")
+                return
+            }
+            self.bufferedBytes += data.count
             self.clientSequence = sequence &+ UInt32(data.count)
             self.sendPacket(sequence: self.serverSequence, acknowledgment: self.clientSequence, flags: Flag.ack)
             if self.isReady {
                 self.enqueueClientPayload(data)
             } else if self.pendingBeforeConnect.count < 32 {
                 self.pendingBeforeConnect.append(data)
+            } else {
+                self.fail("TCP pending queue limit exceeded")
             }
         }
     }
@@ -115,7 +138,7 @@ final class TunnelTCPSession {
             transformedFirstPayload = true
             outgoing.append(contentsOf: transformedChunks(for: data))
         } else {
-            outgoing.append(.init(data: data, delay: 0))
+            outgoing.append(.init(data: data, delay: 0, releasedBytes: data.count))
         }
         processNextWrite()
     }
@@ -128,15 +151,15 @@ final class TunnelTCPSession {
            bytes[1] == 0x03,
            let fragments = Self.fragmentTLSRecord(bytes, requestedPosition: settings.splitPosition) {
             return [
-                .init(data: Data(fragments.0), delay: 0),
-                .init(data: Data(fragments.1), delay: 0.01)
+                .init(data: Data(fragments.0), delay: 0, releasedBytes: 0),
+                .init(data: Data(fragments.1), delay: 0.01, releasedBytes: data.count)
             ]
         }
 
         if settings.mixHostCase, Self.isHTTPMethod(bytes) {
-            return [.init(data: Data(Self.mixHTTPHostCase(bytes)), delay: 0)]
+            return [.init(data: Data(Self.mixHTTPHostCase(bytes)), delay: 0, releasedBytes: data.count)]
         }
-        return [.init(data: data, delay: 0)]
+        return [.init(data: data, delay: 0, releasedBytes: data.count)]
     }
 
     private func processNextWrite() {
@@ -151,6 +174,7 @@ final class TunnelTCPSession {
                     self.fail("TCP write failed: \(error)")
                     return
                 }
+                self.bufferedBytes = max(0, self.bufferedBytes - chunk.releasedBytes)
                 self.writeInProgress = false
                 self.processNextWrite()
             })
@@ -205,7 +229,7 @@ final class TunnelTCPSession {
     }
 
     private func fail(_ message: String) {
-        NSLog("%@", message)
+        TunnelLog.debug(message)
         sendPacket(sequence: serverSequence, acknowledgment: clientSequence, flags: Flag.reset)
         closeOnQueue()
     }
@@ -213,6 +237,11 @@ final class TunnelTCPSession {
     private func closeOnQueue() {
         guard !isClosed else { return }
         isClosed = true
+        connectionTimeoutWorkItem?.cancel()
+        connectionTimeoutWorkItem = nil
+        pendingBeforeConnect.removeAll(keepingCapacity: false)
+        outgoing.removeAll(keepingCapacity: false)
+        bufferedBytes = 0
         connection.stateUpdateHandler = nil
         connection.cancel()
         finishRemoval()

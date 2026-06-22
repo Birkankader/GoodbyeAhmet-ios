@@ -5,8 +5,10 @@ final class PacketTunnelProvider: NEPacketTunnelProvider {
     static let tunnelMTU = 1_500
     private static let maxTCPSessions = 96
     private static let maxUDPSessions = 64
+    private static let maxPendingPacketWrites = 512
 
     private let sessionLock = NSLock()
+    private let stateLock = NSLock()
     private let packetWriteQueue = DispatchQueue(label: "com.birkankader.dpi.packet-write")
     private let blocklist = DNSBlocklist()
     private var settings = TunnelSettings.load(options: nil, protocolConfiguration: nil)
@@ -14,12 +16,14 @@ final class PacketTunnelProvider: NEPacketTunnelProvider {
     private var udpSessions: [String: TunnelUDPSession] = [:]
     private var cleanupTimer: DispatchSourceTimer?
     private var stopping = false
+    private var pendingPacketWrites = 0
+    private var tunnelGeneration: UInt64 = 0
 
     override func startTunnel(
         options: [String: NSObject]?,
         completionHandler: @escaping (Error?) -> Void
     ) {
-        stopping = false
+        let generation = beginTunnelStart()
         settings = TunnelSettings.load(
             options: options,
             protocolConfiguration: protocolConfiguration as? NETunnelProviderProtocol
@@ -29,7 +33,15 @@ final class PacketTunnelProvider: NEPacketTunnelProvider {
             enabled: settings.adBlockEnabled,
             listURL: settings.adBlockListURL
         ) { [weak self] in
-            self?.configureTunnel(completionHandler: completionHandler)
+            guard let self else {
+                completionHandler(PacketTunnelError.providerReleased)
+                return
+            }
+            guard self.isActive(generation) else {
+                completionHandler(PacketTunnelError.cancelled)
+                return
+            }
+            self.configureTunnel(generation: generation, completionHandler: completionHandler)
         }
     }
 
@@ -37,9 +49,7 @@ final class PacketTunnelProvider: NEPacketTunnelProvider {
         with reason: NEProviderStopReason,
         completionHandler: @escaping () -> Void
     ) {
-        stopping = true
-        cleanupTimer?.cancel()
-        cleanupTimer = nil
+        invalidateTunnel()
 
         sessionLock.lock()
         let tcp = Array(tcpSessions.values)
@@ -50,7 +60,7 @@ final class PacketTunnelProvider: NEPacketTunnelProvider {
 
         tcp.forEach { $0.close() }
         udp.forEach { $0.close() }
-        NSLog("Tunnel stopped, reason: %d", reason.rawValue)
+        TunnelLog.debug("Tunnel stopped, reason: \(reason.rawValue)")
         completionHandler()
     }
 
@@ -68,6 +78,7 @@ final class PacketTunnelProvider: NEPacketTunnelProvider {
         flags: UInt8,
         payload: Data = Data()
     ) {
+        guard payload.count <= Self.tunnelMTU - 40 else { return }
         let packet = PacketBuilder.tcp(
             source: source,
             sourcePort: sourcePort,
@@ -88,6 +99,7 @@ final class PacketTunnelProvider: NEPacketTunnelProvider {
         destinationPort: UInt16,
         payload: Data
     ) {
+        guard payload.count <= Self.tunnelMTU - 28 else { return }
         writePacket(PacketBuilder.udp(
             source: source,
             sourcePort: sourcePort,
@@ -109,7 +121,10 @@ final class PacketTunnelProvider: NEPacketTunnelProvider {
         sessionLock.unlock()
     }
 
-    private func configureTunnel(completionHandler: @escaping (Error?) -> Void) {
+    private func configureTunnel(
+        generation: UInt64,
+        completionHandler: @escaping (Error?) -> Void
+    ) {
         let dnsAddress = settings.dnsRedirectAddress?.description ?? "8.8.8.8"
         let ipv4 = NEIPv4Settings(addresses: ["10.120.0.2"], subnetMasks: ["255.255.255.0"])
         ipv4.includedRoutes = [NEIPv4Route.default()]
@@ -131,43 +146,50 @@ final class PacketTunnelProvider: NEPacketTunnelProvider {
                 completionHandler(error)
                 return
             }
+            guard self.isActive(generation) else {
+                completionHandler(PacketTunnelError.cancelled)
+                return
+            }
 
-            self.startCleanupTimer()
-            self.readPackets()
-            NSLog(
-                "Tunnel active. Preset=%@ DNS=%@:%d Adblock=%d",
-                self.settings.presetKey,
-                dnsAddress,
-                self.settings.dnsRedirectPort,
-                self.blocklist.count
+            self.startCleanupTimer(generation: generation)
+            self.readPackets(generation: generation)
+            TunnelLog.debug(
+                "Tunnel active. Preset=\(self.settings.presetKey) " +
+                    "DNS=\(dnsAddress):\(self.settings.dnsRedirectPort) Adblock=\(self.blocklist.count)"
             )
             completionHandler(nil)
         }
     }
 
-    private func readPackets() {
-        guard !stopping else { return }
+    private func readPackets(generation: UInt64) {
+        guard isActive(generation) else { return }
         packetFlow.readPackets { [weak self] packets, _ in
-            guard let self, !self.stopping else { return }
+            guard let self, self.isActive(generation) else { return }
             for packet in packets {
                 self.processIPv4Packet([UInt8](packet))
             }
-            self.readPackets()
+            self.readPackets(generation: generation)
         }
     }
 
     private func processIPv4Packet(_ packet: [UInt8]) {
         guard packet.count >= 20, packet[0] >> 4 == 4 else { return }
         let ipHeaderLength = Int(packet[0] & 0x0f) * 4
-        guard ipHeaderLength >= 20, packet.count >= ipHeaderLength else { return }
-        let source = IPv4Address(packet[12..<16])
-        let destination = IPv4Address(packet[16..<20])
+        let totalLength = Int(read16(packet, at: 2))
+        let fragmentField = read16(packet, at: 6)
+        guard ipHeaderLength >= 20,
+              totalLength >= ipHeaderLength,
+              totalLength <= min(packet.count, Self.tunnelMTU),
+              fragmentField & 0x3fff == 0 else { return }
+        let validatedPacket = Array(packet.prefix(totalLength))
+        let source = IPv4Address(validatedPacket[12..<16])
+        let destination = IPv4Address(validatedPacket[16..<20])
 
-        switch packet[9] {
+        switch validatedPacket[9] {
         case 6:
-            processTCP(packet, ipHeaderLength: ipHeaderLength, source: source, destination: destination)
+            processTCP(validatedPacket, ipHeaderLength: ipHeaderLength, source: source, destination: destination)
         case 17:
-            processUDP(packet, ipHeaderLength: ipHeaderLength, source: source, destination: destination)
+            processUDP(validatedPacket, ipHeaderLength: ipHeaderLength, source: source, destination: destination)
         default:
             break
         }
@@ -183,8 +205,10 @@ final class PacketTunnelProvider: NEPacketTunnelProvider {
         guard packet.count >= offset + 20 else { return }
         let sourcePort = read16(packet, at: offset)
         let destinationPort = read16(packet, at: offset + 2)
+        guard sourcePort != 0, destinationPort != 0 else { return }
         let sequence = read32(packet, at: offset + 4)
         let dataOffset = Int(packet[offset + 12] >> 4) * 4
+        guard dataOffset >= 20, offset + dataOffset <= packet.count else { return }
         let flags = packet[offset + 13]
         let isSYN = flags & 0x02 != 0
         let isACK = flags & 0x10 != 0
@@ -204,8 +228,8 @@ final class PacketTunnelProvider: NEPacketTunnelProvider {
             )
 
             sessionLock.lock()
-            let canAdd = tcpSessions.count < Self.maxTCPSessions
             let previous = tcpSessions[key]
+            let canAdd = previous != nil || tcpSessions.count < Self.maxTCPSessions
             if canAdd { tcpSessions[key] = session }
             sessionLock.unlock()
 
@@ -246,12 +270,17 @@ final class PacketTunnelProvider: NEPacketTunnelProvider {
         guard packet.count >= offset + 8 else { return }
         let sourcePort = read16(packet, at: offset)
         let destinationPort = read16(packet, at: offset + 2)
+        let udpLength = Int(read16(packet, at: offset + 4))
+        guard sourcePort != 0,
+              destinationPort != 0,
+              udpLength >= 8,
+              offset + udpLength <= packet.count else { return }
 
         // QUIC cannot be fragmented like TLS-over-TCP, so force HTTPS fallback to TCP.
         guard destinationPort != 443 else { return }
         let payloadStart = offset + 8
-        guard payloadStart < packet.count else { return }
-        let payload = Data(packet[payloadStart...])
+        guard payloadStart < offset + udpLength else { return }
+        let payload = Data(packet[payloadStart..<(offset + udpLength)])
 
         if destinationPort == 53 {
             let domain = DNSPacket.queryDomain([UInt8](payload))
@@ -292,31 +321,92 @@ final class PacketTunnelProvider: NEPacketTunnelProvider {
         sessionLock.unlock()
 
         guard let session else { return }
-        if canAdd { session.startIfNeeded() }
+        session.startIfNeeded()
         session.send(payload)
     }
 
     private func writePacket(_ packet: Data) {
-        guard !stopping else { return }
+        guard reservePacketWrite() else { return }
         packetWriteQueue.async { [weak self] in
-            guard let self, !self.stopping else { return }
+            guard let self else { return }
+            defer { self.releasePacketWrite() }
+            guard !self.isStopping else { return }
             self.packetFlow.writePackets([packet], withProtocols: [NSNumber(value: 2)])
         }
     }
 
-    private func startCleanupTimer() {
+    private func startCleanupTimer(generation: UInt64) {
         let timer = DispatchSource.makeTimerSource(queue: DispatchQueue(label: "com.birkankader.dpi.cleanup"))
         timer.schedule(deadline: .now() + 10, repeating: 10)
         timer.setEventHandler { [weak self] in
-            guard let self, !self.stopping else { return }
+            guard let self, self.isActive(generation) else { return }
             self.sessionLock.lock()
             let sessions = Array(self.udpSessions.values)
             self.sessionLock.unlock()
             let cutoff = Date().addingTimeInterval(-30)
             sessions.forEach { $0.closeIfIdle(before: cutoff) }
         }
-        cleanupTimer = timer
+
+        stateLock.lock()
+        let previousTimer = cleanupTimer
+        let shouldRun = !stopping && tunnelGeneration == generation
+        if shouldRun { cleanupTimer = timer }
+        stateLock.unlock()
+
         timer.resume()
+        if shouldRun {
+            previousTimer?.cancel()
+        } else {
+            timer.cancel()
+        }
+    }
+
+    private var isStopping: Bool {
+        stateLock.lock()
+        defer { stateLock.unlock() }
+        return stopping
+    }
+
+    private func beginTunnelStart() -> UInt64 {
+        stateLock.lock()
+        tunnelGeneration &+= 1
+        stopping = false
+        let generation = tunnelGeneration
+        let previousTimer = cleanupTimer
+        cleanupTimer = nil
+        stateLock.unlock()
+        previousTimer?.cancel()
+        return generation
+    }
+
+    private func invalidateTunnel() {
+        stateLock.lock()
+        tunnelGeneration &+= 1
+        stopping = true
+        let timer = cleanupTimer
+        cleanupTimer = nil
+        stateLock.unlock()
+        timer?.cancel()
+    }
+
+    private func isActive(_ generation: UInt64) -> Bool {
+        stateLock.lock()
+        defer { stateLock.unlock() }
+        return !stopping && tunnelGeneration == generation
+    }
+
+    private func reservePacketWrite() -> Bool {
+        stateLock.lock()
+        defer { stateLock.unlock() }
+        guard !stopping, pendingPacketWrites < Self.maxPendingPacketWrites else { return false }
+        pendingPacketWrites += 1
+        return true
+    }
+
+    private func releasePacketWrite() {
+        stateLock.lock()
+        pendingPacketWrites = max(0, pendingPacketWrites - 1)
+        stateLock.unlock()
     }
 
     private func read16(_ bytes: [UInt8], at offset: Int) -> UInt16 {
@@ -332,7 +422,13 @@ final class PacketTunnelProvider: NEPacketTunnelProvider {
 }
 
 private enum PacketTunnelError: LocalizedError {
+    case cancelled
     case providerReleased
 
-    var errorDescription: String? { "Packet tunnel provider released before startup." }
+    var errorDescription: String? {
+        switch self {
+        case .cancelled: return "Packet tunnel startup was cancelled."
+        case .providerReleased: return "Packet tunnel provider released before startup."
+        }
+    }
 }

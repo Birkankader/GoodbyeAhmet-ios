@@ -3,6 +3,7 @@ import Foundation
 @MainActor
 final class AppSettings: ObservableObject {
     static let defaultBlocklistURL = "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts"
+    private static let disclosureVersion = 1
 
     private enum Key {
         static let preset = "selected_preset"
@@ -15,6 +16,7 @@ final class AppSettings: ObservableObject {
         static let adBlock = "adblock_enabled"
         static let adBlockURL = "adblock_list_url"
         static let activateOnStart = "activate_on_start"
+        static let disclosureVersion = "vpn_disclosure_version"
     }
 
     @Published var selectedPresetKey: String { didSet { save(Key.preset, selectedPresetKey) } }
@@ -27,6 +29,7 @@ final class AppSettings: ObservableObject {
     @Published var adBlockEnabled: Bool { didSet { save(Key.adBlock, adBlockEnabled) } }
     @Published var adBlockListURL: String { didSet { save(Key.adBlockURL, adBlockListURL) } }
     @Published var activateOnStart: Bool { didSet { save(Key.activateOnStart, activateOnStart) } }
+    @Published private(set) var hasAcceptedVPNDisclosure: Bool
 
     private let defaults: UserDefaults
 
@@ -44,6 +47,7 @@ final class AppSettings: ObservableObject {
         adBlockEnabled = defaults.object(forKey: Key.adBlock) as? Bool ?? false
         adBlockListURL = defaults.string(forKey: Key.adBlockURL) ?? Self.defaultBlocklistURL
         activateOnStart = defaults.object(forKey: Key.activateOnStart) as? Bool ?? false
+        hasAcceptedVPNDisclosure = defaults.integer(forKey: Key.disclosureVersion) >= Self.disclosureVersion
     }
 
     var selectedPreset: VPNPreset { VPNPreset.find(selectedPresetKey) }
@@ -58,7 +62,7 @@ final class AppSettings: ObservableObject {
             dnsAddress: dnsAddress,
             dnsPort: (1...65535).contains(dnsPort) ? dnsPort : 53,
             adBlockEnabled: adBlockEnabled,
-            adBlockListURL: adBlockListURL
+            adBlockListURL: Self.sanitizedBlocklistURL(adBlockListURL)
         )
     }
 
@@ -71,6 +75,26 @@ final class AppSettings: ObservableObject {
         fakeTTL = preset.fakeTTL
         dnsAddress = preset.dnsAddress
         dnsPort = preset.dnsPort
+    }
+
+    func acceptVPNDisclosure() {
+        defaults.set(Self.disclosureVersion, forKey: Key.disclosureVersion)
+        hasAcceptedVPNDisclosure = true
+    }
+
+    var isBlocklistURLValid: Bool {
+        Self.sanitizedBlocklistURL(adBlockListURL) == adBlockListURL.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    private static func sanitizedBlocklistURL(_ rawValue: String) -> String {
+        let trimmed = rawValue.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard trimmed.utf8.count <= 2_048,
+              let url = URL(string: trimmed),
+              url.scheme?.lowercased() == "https",
+              url.host != nil,
+              url.user == nil,
+              url.password == nil else { return defaultBlocklistURL }
+        return trimmed
     }
 
     private func save(_ key: String, _ value: Any) {

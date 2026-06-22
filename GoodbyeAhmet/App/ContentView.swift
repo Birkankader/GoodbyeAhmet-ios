@@ -3,6 +3,7 @@ import SwiftUI
 struct ContentView: View {
     @EnvironmentObject private var settings: AppSettings
     @EnvironmentObject private var vpn: VPNManager
+    @State private var showsVPNDisclosure = false
 
     var body: some View {
         NavigationView {
@@ -34,6 +35,13 @@ struct ContentView: View {
             .navigationBarHidden(true)
         }
         .navigationViewStyle(.stack)
+        .sheet(isPresented: $showsVPNDisclosure) {
+            VPNDisclosureView {
+                settings.acceptVPNDisclosure()
+                showsVPNDisclosure = false
+                Task { await vpn.connect(using: settings.configuration) }
+            }
+        }
     }
 
     private var header: some View {
@@ -62,7 +70,13 @@ struct ContentView: View {
 
     private var connectButton: some View {
         Button {
-            Task { await vpn.toggle(using: settings.configuration) }
+            if vpn.status.isConnected || vpn.status.isBusy {
+                Task { await vpn.toggle(using: settings.configuration) }
+            } else if settings.hasAcceptedVPNDisclosure {
+                Task { await vpn.connect(using: settings.configuration) }
+            } else {
+                showsVPNDisclosure = true
+            }
         } label: {
             ZStack {
                 Circle()

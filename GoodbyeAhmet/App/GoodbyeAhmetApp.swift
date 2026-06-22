@@ -12,7 +12,9 @@ struct GoodbyeAhmetApp: App {
                 .environmentObject(vpnManager)
                 .task {
                     await vpnManager.prepare()
-                    if settings.activateOnStart, vpnManager.status == .disconnected {
+                    if settings.activateOnStart,
+                       settings.hasAcceptedVPNDisclosure,
+                       vpnManager.status == .disconnected {
                         await vpnManager.connect(using: settings.configuration)
                     }
                 }
